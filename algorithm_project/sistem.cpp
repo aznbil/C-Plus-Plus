@@ -21,7 +21,6 @@ struct Anggota{
   };
   
 
-
 struct Peminjaman{
   int idPeminjam;
   int idBuku;
@@ -30,17 +29,92 @@ struct Peminjaman{
   string tanggal_kembali;
 };
 
+// ini bagian untuk menu
+void menu();
+void menu_Create();
+void menu_Read();
+void menu_Update();
+void menu_Delete();
+
+// ini bagian untuk membuat data
 void create_buku();
 void create_anggota();
 void create_peminjaman();
 
+// ini bagian untuk membaca data
+void read_buku();
+void read_anggota();
+void read_peminjaman();
+
+// ini bagian untuk memperbarui data
+void update_buku();
+void update_anggota();
+void update_peminjaman();
+
+// ini bagian untuk menghapus data
+void delete_buku();
+void delete_anggota();
+void delete_peminjaman();
+
 int main(){
-  while(true){
-  create_buku();
-  create_anggota();
-  create_peminjaman();
-  }
+  menu();
   return 0;
+}
+
+void menu(){
+  int choose;
+
+  cout << "Welcome" << endl;
+  cout << "1. Create " << endl;
+  cout << "2. Read " << endl;
+  cout << "3. Update " << endl;
+  cout << "4. Delete " << endl;
+  cout << "5. Exit " << endl;
+  cout << "Pilih menu : ";
+  cin >> choose;
+
+  switch(choose){
+    case 1:
+      menu_Create();
+      break;
+    case 2:
+      break;
+    case 3:
+      break;
+    case 4:
+      break;
+    case 5:
+      break;
+    default:
+      cout << "Input tidak valid" << endl;
+      break;
+  }
+}
+
+void menu_Create(){
+  int choose;
+
+  cout << "\nMenu Create" << endl;
+  cout << "1. Buku " << endl;
+  cout << "2. Anggota " << endl;
+  cout << "3. Peminjaman " << endl;
+  cout << "Pilih menu : ";
+  cin >> choose;
+
+  switch (choose){
+    case 1:
+      create_buku();
+      break;
+    case 2:
+      create_anggota();
+      break;
+    case 3:
+      create_peminjaman();
+      break;
+    default:
+      cout << "Input tidak valid" << endl;
+      break;
+  }
 }
 
 void create_buku(){
