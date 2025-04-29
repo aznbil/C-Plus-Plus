@@ -15,7 +15,7 @@ struct Pekerjaan {
 struct Anggota{
   int id; 
   Pekerjaan role;
-  char nama[50]; //struct dalam struct ada mahasiswa, dosen, pegawai jangan langsung nama. nanti dipanggil id nya 
+  string nama; //struct dalam struct ada mahasiswa, dosen, pegawai jangan langsung nama. nanti dipanggil id nya 
   string alamat;
   char telepon[15];
   };
@@ -35,6 +35,7 @@ void menu_Create();
 void menu_Read();
 void menu_Update();
 void menu_Delete();
+void menu_sorting();
 
 // ini bagian untuk membuat data
 void create_buku();
@@ -42,9 +43,9 @@ void create_anggota();
 void create_peminjaman();
 
 // ini bagian untuk membaca data
-void read_buku(Buku buku[], int n, int index = 0);
-void read_anggota(Anggota anggota[], int n, int index = 0);
-void read_peminjaman(Peminjaman pinjaman[], int n, int index = 0);
+void read_buku(int index);
+void read_anggota(int index);
+void read_peminjaman(int index);
 
 // ini bagian untuk memperbarui data
 void update_buku();
@@ -55,6 +56,10 @@ void update_peminjaman();
 void delete_buku();
 void delete_anggota();
 void delete_peminjaman();
+
+void sorting_buku_tahunTerbit_DESC();
+void sorting_anggota();
+void sorting_peminjaman();
 
 Buku daftarBuku[100];
 Anggota daftarAnggota[100];
@@ -68,13 +73,15 @@ int main(){
 
 void menu(){
   int choose;
+  char jawab;
   do{
     cout << "Welcome" << endl;
     cout << "1. Create " << endl;
     cout << "2. Read " << endl;
-    cout << "3. Update " << endl;
+    cout << "3. Sorting " << endl;
     cout << "4. Delete " << endl;
-    cout << "5. Exit " << endl;
+    cout << "5. Update " << endl;
+    cout << "6. Exit " << endl;
     cout << "Pilih menu : ";
     cin >> choose;
 
@@ -86,21 +93,26 @@ void menu(){
         menu_Read();
         break;
       case 3:
+      menu_sorting();
         break;
       case 4:
         break;
       case 5:
         break;
+      case 6:
+      exit(0);
+        break;
       default:
         cout << "Input tidak valid" << endl;
         break;
     }
-  }while(choose > 5);
+    cout << "Ingin lanjut (y/n): ";
+    cin >> jawab;
+  }while(jawab == 'y');
 }
 
 void menu_Create(){
   int choose;
-
   cout << "\nMenu Create" << endl;
   cout << "1. Buku " << endl;
   cout << "2. Anggota " << endl;
@@ -125,131 +137,137 @@ void menu_Create(){
 }
 
 void create_buku(){
-  Buku buku[100];
-  int n;
+  int dataygdiinput;
   
   cout << "Berapa data yang ingin di input? ";
-  cin >> n;
-  if(n > 100){
-    cout << "Input melebihi batas" << endl;
-    return;
-  }
-  if(n < 1){
+  cin >> dataygdiinput;
+  if(dataygdiinput < 1){
     cout << "Input tidak valid" << endl;
     return;
   }
+  if(dataygdiinput + jumlahBuku > 100){
+    cout << "Input melebihi batas" << endl;
+    return;
+  }
   
-  system("cls");
-  for (int i = 0; i < n; i++){
+  for (int i = jumlahBuku ; i < dataygdiinput + jumlahBuku; i++){
+    cout << "Buku ke-" << i + 1 << endl;
     cout << "Id buku\t\t: ";
-    cin >> buku[i].id;
+    cin >> daftarBuku[i].id;
     cin.ignore();
     cout << "Judul buku\t: ";
-    getline(cin, buku[i].judul);
+    getline(cin, daftarBuku[i].judul);
     cout << "Penulis buku\t: ";
-    getline(cin, buku[i].penulis);
+    getline(cin, daftarBuku[i].penulis);
     cout << "Tahun terbit\t: ";
-    cin >> buku[i].tahun_terbit;
-
+    cin >> daftarBuku[i].tahun_terbit;
     cout << endl;
   }
+  jumlahBuku += dataygdiinput;
 }
 
 void create_anggota(){
-  Anggota anggota[100];
-  int n;
-  
+  int dataygdiinput;
   cout << "Berapa data yang ingin di input? ";
-  cin >> n;
-  if(n > 100){
+  cin >> dataygdiinput;
+  if(dataygdiinput + jumlahAnggota > 100){
     cout << "Input melebihi batas" << endl;
     return;
   }
-  if(n < 1){
+  if(dataygdiinput < 1){
     cout << "Input tidak valid" << endl;
     return;
   }
   
-  system("cls");
-  for (int i = 0; i < n; i++){
+  for (int i = jumlahAnggota; i < dataygdiinput + jumlahAnggota; i++){
+  cout << "Anggota ke-" << i + 1 << endl;
   cout << "Id anggota : ";
-  cin >> anggota[i].id;
+  cin >> daftarAnggota[i].id;
   cin.ignore();
   cout << "Nama anggota : ";
-  cin >> anggota[i].nama;
-  cout << "Pekerjaan anggota : ";
-  getline(cin, anggota[i].role.role);
-  cout << "Alamat anggota : ";
-  getline(cin, anggota[i].alamat);
-  cout << "Telepon anggota : ";
-  cin >> anggota[i].telepon;
+  getline(cin, daftarAnggota[i].nama);
+  cout << "Pekerjaan : ";
+  getline(cin, daftarAnggota[i].role.role);
+  cout << "Alamat : ";
+  getline(cin, daftarAnggota[i].alamat);
+  cout << "Telepon : ";
+  cin >> daftarAnggota[i].telepon;
+  cout << endl;
 }
-
+  jumlahAnggota += dataygdiinput;
 }
 
 void create_peminjaman(){
-  Peminjaman pinjaman[100];
-  int n;
-
+  int dataygdiinput;
   cout << "Berapa data yang ingin di input? ";
-  cin >> n;
-  if(n > 100){
+  cin >> dataygdiinput;
+  if(dataygdiinput + jumlahPeminjaman > 100){
     cout << "Input melebihi batas" << endl;
     return;
   }
-  if(n < 1){
+  if(dataygdiinput < 1){
     cout << "Input tidak valid" << endl;
     return;
   }
 
-  for (int i = 0; i < n; i++){  
+  for (int i = jumlahPeminjaman; i < dataygdiinput + jumlahPeminjaman; i++){  
   cout << "Id peminjam : ";
-  cin >> pinjaman[i].idPeminjam;
+  cin >> daftarPeminjaman[i].idPeminjam;
   cin.ignore();
   cout << "Id buku : ";
-  cin >> pinjaman[i].idBuku;
+  cin >> daftarPeminjaman[i].idBuku;
   cin.ignore();
   cout << "Id anggota : ";
-  cin >> pinjaman[i].idAnggota;
+  cin >> daftarPeminjaman[i].idAnggota;
   cin.ignore();
   cout << "Tanggal pinjam : ";
-  getline(cin, pinjaman[i].tanggal_pinjam);
+  getline(cin, daftarPeminjaman[i].tanggal_pinjam);
   cout << "Tanggal kembali : ";
-  getline(cin, pinjaman[i].tanggal_kembali);
+  getline(cin, daftarPeminjaman[i].tanggal_kembali);
+  cout << endl;
   }
-
+  jumlahPeminjaman += dataygdiinput;
 }
 
-void read_buku(Buku buku[], int n, int index){
-  if (index == n) return;
-  cout << "Id Buku: " << buku[index].id << endl;
-  cout << "Judul: " << buku[index].judul << endl;
-  cout << "Penulis: " << buku[index].penulis << endl;
-  cout << "Tahun Terbit: " << buku[index].tahun_terbit << endl;
+void read_buku(int index = 0){
+  if (index == 0){
+    cout << "\nDaftar Buku" << endl;
+  }
+  if(index >= jumlahBuku) return;
+  cout << "Id Buku: " << daftarBuku[index].id << endl;
+  cout << "Judul: " << daftarBuku[index].judul << endl;
+  cout << "Penulis: " << daftarBuku[index].penulis << endl;
+  cout << "Tahun Terbit: " << daftarBuku[index].tahun_terbit << endl;
   cout << "----------------------\n";
-  read_buku(buku, n, index + 1);
+  read_buku(index + 1);
 }
 
-void read_anggota(Anggota anggota[], int n, int index){
-  if (index == n) return;
-  cout << "Id Anggota: " << anggota[index].id << endl;
-  cout << "Nama: " << anggota[index].nama << endl;
-  cout << "Pekerjaan: " << anggota[index].role.role << endl;
-  cout << "Alamat: " << anggota[index].alamat << endl;
-  cout << "Telepon: " << anggota[index].telepon << endl;
+void read_anggota(int index = 0){
+  if (index == 0){
+    cout << "\nDaftar Anggota" << endl;
+  }
+  if(index >= jumlahAnggota) return;
+  cout << "Id Anggota: " << daftarAnggota[index].id << endl;
+  cout << "Nama: " << daftarAnggota[index].nama << endl;
+  cout << "Pekerjaan: " << daftarAnggota[index].role.role << endl;
+  cout << "Alamat: " << daftarAnggota[index].alamat << endl;
+  cout << "Telepon: " << daftarAnggota[index].telepon << endl;
   cout << "----------------------\n";
-  read_anggota(anggota, n, index + 1);
+  read_anggota(index + 1);
 }
 
-void read_peminjaman(Peminjaman pinjaman[], int n, int index){
-  if (index == n) return;
-  cout << "Id Peminjam: " << pinjaman[index].idPeminjam << endl;
-  cout << "Id Buku: " << pinjaman[index].idBuku << endl;
-  cout << "Id Anggota: " << pinjaman[index].idAnggota << endl;
-  cout << "Tanggal Pinjam: " << pinjaman[index].tanggal_pinjam << endl;
-  cout << "Tanggal Kembali: " << pinjaman[index].tanggal_kembali << endl;
+void read_peminjaman(int index = 0){
+  if (index == 0){
+    cout << "\nDaftar Peminjaman" << endl;
+  }
+  if(index >= jumlahPeminjaman) return;
+  cout << "Id Peminjam: " << daftarPeminjaman[index].idPeminjam << endl;
+  cout << "Id Buku: " << daftarPeminjaman[index].idBuku << endl;
+  cout << "Id Anggota: " << daftarPeminjaman[index].idAnggota << endl;
+  cout << "Tanggal Pinjam: " << daftarPeminjaman[index].tanggal_pinjam << endl;
+  cout << "Tanggal Kembali: " << daftarPeminjaman[index].tanggal_kembali << endl;
   cout << "----------------------\n";
-  read_peminjaman(pinjaman, n, index + 1);
+  read_peminjaman(index + 1);
 }
 
 void menu_Read(){
@@ -266,21 +284,21 @@ void menu_Read(){
           if (jumlahBuku == 0) {
               cout << "Tidak ada data buku." << endl;
           } else {
-              read_buku(daftarBuku, jumlahBuku);
+              read_buku();
           }
           break;
       case 2:
           if (jumlahAnggota == 0) {
               cout << "Tidak ada data anggota." << endl;
           } else {
-              read_anggota(daftarAnggota, jumlahAnggota);
+              read_anggota();
           }
           break;
       case 3:
           if (jumlahPeminjaman == 0) {
               cout << "Tidak ada data peminjaman." << endl;
           } else {
-              read_peminjaman(daftarPeminjaman, jumlahPeminjaman);
+              read_peminjaman();
           }
           break;
       default:
@@ -288,3 +306,73 @@ void menu_Read(){
           break;
   }
 }
+
+void sorting_buku_tahunTerbit_DESC(){
+  for(int i = 0; i < jumlahBuku; i++){
+    for (int j = 0; j < jumlahBuku - i - 1; j++){
+      if (daftarBuku[j].tahun_terbit < daftarBuku[j + 1].tahun_terbit){
+        swap(daftarBuku[j], daftarBuku[j + 1]);
+      }
+    }
+  }
+  read_buku();
+}
+
+void sorting_anggota(){// acending
+  for(int i = 0; i < jumlahAnggota; i++){
+    for (int j = 0; j < jumlahAnggota - i - 1; j++){
+      if (daftarAnggota[j].nama > daftarAnggota[j + 1].nama){
+        swap(daftarAnggota[j], daftarAnggota[j + 1]);
+      }
+    }
+  }
+  read_anggota();
+}
+
+void sorting_peminjaman(){ // acending
+  for(int i = 0; i < jumlahPeminjaman; i++){
+    for (int j = 0; j < jumlahPeminjaman - i - 1; j++){
+      if (daftarPeminjaman[j].tanggal_pinjam > daftarPeminjaman[j + 1].tanggal_pinjam){
+        swap(daftarPeminjaman[j], daftarPeminjaman[j + 1]);
+      }
+    }
+  }
+  read_peminjaman();
+}
+
+void menu_sorting(){
+  int choose;
+  cout << "\nMenu Sorting" << endl;
+  cout << "1. Tahun Terbit Buku" << endl;
+  cout << "2. Anggota" << endl;
+  cout << "3. Peminjaman" << endl;
+  cout << "Pilih menu: ";
+  cin >> choose;
+  switch (choose){
+  case 1:
+    if (jumlahBuku == 0) {
+      cout << "Tidak ada data buku." << endl;
+  } else {
+      sorting_buku_tahunTerbit_DESC();
+  }
+  break;
+  case 2:
+    if (jumlahAnggota == 0) {
+      cout << "Tidak ada data buku." << endl;
+  } else {
+    sorting_anggota();
+  }
+  break;
+  case 3:
+    if (jumlahPeminjaman == 0) {
+      cout << "Tidak ada data buku." << endl;
+  } else {
+    sorting_peminjaman();
+  }
+    break;
+  default:
+    cout << "Input tidak valid" << endl;
+    break;
+  }
+}
+
