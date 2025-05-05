@@ -343,9 +343,9 @@ void sorting_peminjaman(){ // acending
 void menu_sorting(){
   int choose;
   cout << "\nMenu Sorting" << endl;
-  cout << "1. Tahun Terbit Buku" << endl;
-  cout << "2. Anggota" << endl;
-  cout << "3. Peminjaman" << endl;
+  cout << "1. Tahun Terbit Buku(DESC)" << endl;
+  cout << "2. Nama Anggota(ASCD)" << endl;
+  cout << "3. Tanggal Pinjam Peminjaman(ASCD)" << endl;
   cout << "Pilih menu: ";
   cin >> choose;
   switch (choose){
