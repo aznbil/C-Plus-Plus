@@ -19,7 +19,7 @@ struct Anggota{
   string alamat;
   char telepon[15];
   };
-  
+
 
 struct Peminjaman{
   int idPeminjam;
@@ -61,6 +61,11 @@ void sorting_buku_tahunTerbit_DESC();
 void sorting_anggota();
 void sorting_peminjaman();
 
+void search_buku();
+void search_anggota();
+void search_peminjaman();
+void menu_search();
+
 Buku daftarBuku[100];
 Anggota daftarAnggota[100];
 Peminjaman daftarPeminjaman[100];
@@ -81,7 +86,8 @@ void menu(){
     cout << "3. Sorting " << endl;
     cout << "4. Delete " << endl;
     cout << "5. Update " << endl;
-    cout << "6. Exit " << endl;
+    cout << "6. Search" << endl;
+    cout << "7. Exit" << endl;
     cout << "Pilih menu : ";
     cin >> choose;
 
@@ -100,7 +106,10 @@ void menu(){
       case 5:
         break;
       case 6:
-      exit(0);
+         menu_search();
+        break;
+      case 7:
+         exit(0);
         break;
       default:
         cout << "Input tidak valid" << endl;
@@ -138,7 +147,7 @@ void menu_Create(){
 
 void create_buku(){
   int dataygdiinput;
-  
+
   cout << "Berapa data yang ingin di input? ";
   cin >> dataygdiinput;
   if(dataygdiinput < 1){
@@ -149,7 +158,7 @@ void create_buku(){
     cout << "Input melebihi batas" << endl;
     return;
   }
-  
+
   for (int i = jumlahBuku ; i < dataygdiinput + jumlahBuku; i++){
     cout << "Buku ke-" << i + 1 << endl;
     cout << "Id buku\t\t: ";
@@ -178,7 +187,7 @@ void create_anggota(){
     cout << "Input tidak valid" << endl;
     return;
   }
-  
+
   for (int i = jumlahAnggota; i < dataygdiinput + jumlahAnggota; i++){
   cout << "Anggota ke-" << i + 1 << endl;
   cout << "Id anggota : ";
@@ -278,7 +287,7 @@ void menu_Read(){
   cout << "3. Peminjaman" << endl;
   cout << "Pilih menu: ";
   cin >> choose;
-  
+
   switch (choose){
       case 1:
           if (jumlahBuku == 0) {
@@ -375,4 +384,97 @@ void menu_sorting(){
     break;
   }
 }
+
+void menu_search() {
+  int choose;
+  cout << "\nMenu Search" << endl;
+  cout << "1. Cari Buku" << endl;
+  cout << "2. Cari Anggota" << endl;
+  cout << "3. Cari Peminjaman" << endl;
+  cout << "Pilih menu: ";
+  cin >> choose;
+
+  switch (choose){
+    case 1:
+      search_buku();
+      break;
+    case 2:
+      search_anggota();
+      break;
+    case 3:
+      search_peminjaman();
+      break;
+    default:
+      cout << "Input tidak valid" << endl;
+      break;
+  }
+}
+
+void search_buku() {
+  string keyword;
+  cin.ignore();
+  cout << "Masukkan judul buku yang dicari: ";
+  getline(cin, keyword);
+
+  bool found = false;
+  for (int i = 0; i < jumlahBuku; i++) {
+    if (daftarBuku[i].judul.find(keyword) != string::npos) {
+      cout << "Id: " << daftarBuku[i].id << endl;
+      cout << "Judul: " << daftarBuku[i].judul << endl;
+      cout << "Penulis: " << daftarBuku[i].penulis << endl;
+      cout << "Tahun Terbit: " << daftarBuku[i].tahun_terbit << endl;
+      cout << "----------------------" << endl;
+      found = true;
+    }
+  }
+  if (!found) {
+    cout << "Buku tidak ditemukan." << endl;
+  }
+}
+
+void search_anggota() {
+  string keyword;
+  cin.ignore();
+  cout << "Masukkan nama anggota yang dicari: ";
+  getline(cin, keyword);
+
+  bool found = false;
+  for (int i = 0; i < jumlahAnggota; i++) {
+    if (daftarAnggota[i].nama.find(keyword) != string::npos) {
+      cout << "Id: " << daftarAnggota[i].id << endl;
+      cout << "Nama: " << daftarAnggota[i].nama << endl;
+      cout << "Pekerjaan: " << daftarAnggota[i].role.role << endl;
+      cout << "Alamat: " << daftarAnggota[i].alamat << endl;
+      cout << "Telepon: " << daftarAnggota[i].telepon << endl;
+      cout << "----------------------" << endl;
+      found = true;
+    }
+  }
+  if (!found) {
+    cout << "Anggota tidak ditemukan." << endl;
+  }
+}
+
+void search_peminjaman() {
+  int id;
+  cout << "Masukkan ID peminjam: ";
+  cin >> id;
+
+  bool found = false;
+  for (int i = 0; i < jumlahPeminjaman; i++) {
+    if (daftarPeminjaman[i].idPeminjam == id) {
+      cout << "Id Peminjam: " << daftarPeminjaman[i].idPeminjam << endl;
+      cout << "Id Buku: " << daftarPeminjaman[i].idBuku << endl;
+      cout << "Id Anggota: " << daftarPeminjaman[i].idAnggota << endl;
+      cout << "Tanggal Pinjam: " << daftarPeminjaman[i].tanggal_pinjam << endl;
+      cout << "Tanggal Kembali: " << daftarPeminjaman[i].tanggal_kembali << endl;
+      cout << "----------------------" << endl;
+      found = true;
+    }
+  }
+  if (!found) {
+    cout << "Data peminjaman tidak ditemukan." << endl;
+  }
+}
+
 
