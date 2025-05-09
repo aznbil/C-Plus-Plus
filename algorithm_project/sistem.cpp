@@ -190,16 +190,16 @@ void create_anggota(){
 
   for (int i = jumlahAnggota; i < dataygdiinput + jumlahAnggota; i++){
   cout << "Anggota ke-" << i + 1 << endl;
-  cout << "Id anggota : ";
+  cout << "Id anggota\t: ";
   cin >> daftarAnggota[i].id;
   cin.ignore();
-  cout << "Nama anggota : ";
+  cout << "Nama anggota\t: ";
   getline(cin, daftarAnggota[i].nama);
-  cout << "Pekerjaan : ";
+  cout << "Pekerjaan\t: ";
   getline(cin, daftarAnggota[i].role.role);
-  cout << "Alamat : ";
+  cout << "Alamat\t\t: ";
   getline(cin, daftarAnggota[i].alamat);
-  cout << "Telepon : ";
+  cout << "Telepon\t\t: ";
   cin >> daftarAnggota[i].telepon;
   cout << endl;
 }
@@ -220,18 +220,18 @@ void create_peminjaman(){
   }
 
   for (int i = jumlahPeminjaman; i < dataygdiinput + jumlahPeminjaman; i++){  
-  cout << "Id peminjam : ";
+  cout << "Id peminjam\t: ";
   cin >> daftarPeminjaman[i].idPeminjam;
   cin.ignore();
-  cout << "Id buku : ";
+  cout << "Id buku\t\t: ";
   cin >> daftarPeminjaman[i].idBuku;
   cin.ignore();
-  cout << "Id anggota : ";
+  cout << "Id anggota\t: ";
   cin >> daftarPeminjaman[i].idAnggota;
   cin.ignore();
-  cout << "Tanggal pinjam : ";
+  cout << "Tanggal pinjam\t: ";
   getline(cin, daftarPeminjaman[i].tanggal_pinjam);
-  cout << "Tanggal kembali : ";
+  cout << "Tanggal kembali\t: ";
   getline(cin, daftarPeminjaman[i].tanggal_kembali);
   cout << endl;
   }
@@ -243,10 +243,10 @@ void read_buku(int index = 0){
     cout << "\nDaftar Buku" << endl;
   }
   if(index >= jumlahBuku) return;
-  cout << "Id Buku: " << daftarBuku[index].id << endl;
-  cout << "Judul: " << daftarBuku[index].judul << endl;
-  cout << "Penulis: " << daftarBuku[index].penulis << endl;
-  cout << "Tahun Terbit: " << daftarBuku[index].tahun_terbit << endl;
+  cout << "Id Buku\t\t: " << daftarBuku[index].id << endl;
+  cout << "Judul\t\t: " << daftarBuku[index].judul << endl;
+  cout << "Penulis\t\t: " << daftarBuku[index].penulis << endl;
+  cout << "Tahun Terbit\t: " << daftarBuku[index].tahun_terbit << endl;
   cout << "----------------------\n";
   read_buku(index + 1);
 }
@@ -256,11 +256,11 @@ void read_anggota(int index = 0){
     cout << "\nDaftar Anggota" << endl;
   }
   if(index >= jumlahAnggota) return;
-  cout << "Id Anggota: " << daftarAnggota[index].id << endl;
-  cout << "Nama: " << daftarAnggota[index].nama << endl;
-  cout << "Pekerjaan: " << daftarAnggota[index].role.role << endl;
-  cout << "Alamat: " << daftarAnggota[index].alamat << endl;
-  cout << "Telepon: " << daftarAnggota[index].telepon << endl;
+  cout << "Id Anggota\t: " << daftarAnggota[index].id << endl;
+  cout << "Nama\t\t: " << daftarAnggota[index].nama << endl;
+  cout << "Pekerjaan\t: " << daftarAnggota[index].role.role << endl;
+  cout << "Alamat\t\t: " << daftarAnggota[index].alamat << endl;
+  cout << "Telepon\t\t: " << daftarAnggota[index].telepon << endl;
   cout << "----------------------\n";
   read_anggota(index + 1);
 }
@@ -270,11 +270,11 @@ void read_peminjaman(int index = 0){
     cout << "\nDaftar Peminjaman" << endl;
   }
   if(index >= jumlahPeminjaman) return;
-  cout << "Id Peminjam: " << daftarPeminjaman[index].idPeminjam << endl;
-  cout << "Id Buku: " << daftarPeminjaman[index].idBuku << endl;
-  cout << "Id Anggota: " << daftarPeminjaman[index].idAnggota << endl;
-  cout << "Tanggal Pinjam: " << daftarPeminjaman[index].tanggal_pinjam << endl;
-  cout << "Tanggal Kembali: " << daftarPeminjaman[index].tanggal_kembali << endl;
+  cout << "Id Peminjam\t: " << daftarPeminjaman[index].idPeminjam << endl;
+  cout << "Id Buku\t\t: " << daftarPeminjaman[index].idBuku << endl;
+  cout << "Id Anggota\t: " << daftarPeminjaman[index].idAnggota << endl;
+  cout << "Tanggal Pinjam\t: " << daftarPeminjaman[index].tanggal_pinjam << endl;
+  cout << "Tanggal Kembali\t: " << daftarPeminjaman[index].tanggal_kembali << endl;
   cout << "----------------------\n";
   read_peminjaman(index + 1);
 }
