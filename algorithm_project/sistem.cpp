@@ -80,7 +80,7 @@ void menu(){
   int choose;
   char jawab;
   do{
-    cout << "Welcome" << endl;
+    cout << "\nWelcome" << endl;
     cout << "1. Create " << endl;
     cout << "2. Read " << endl;
     cout << "3. Sorting " << endl;
@@ -99,7 +99,7 @@ void menu(){
         menu_Read();
         break;
       case 3:
-      menu_sorting();
+        menu_sorting();
         break;
       case 4:
         break;
@@ -226,9 +226,17 @@ void create_peminjaman(){
   cout << "Id buku\t\t: ";
   cin >> daftarPeminjaman[i].idBuku;
   cin.ignore();
+  if(daftarPeminjaman[i].idBuku != daftarBuku->id){ // error handling jika id buku tidak ditemukan
+    cout << "ID buku tidak ditemukan!\n";
+    break;
+  }else
   cout << "Id anggota\t: ";
   cin >> daftarPeminjaman[i].idAnggota;
   cin.ignore();
+  if(daftarPeminjaman[i].idAnggota != daftarAnggota->id){ // error handling jika id anggota tidak ditemukan 
+    cout << "ID anggota tidak ditemukan!\n";
+    break;
+  }else
   cout << "Tanggal pinjam\t: ";
   getline(cin, daftarPeminjaman[i].tanggal_pinjam);
   cout << "Tanggal kembali\t: ";
