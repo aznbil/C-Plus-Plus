@@ -2,36 +2,45 @@
 using namespace std;
 // unsigned = angka positif saja, tanpa negatif
 
-struct Buku{
-  unsigned int id = ++last_id_buku;
-  string judul;
-  string penulis;
-  int tahun_terbit;
-  static unsigned int last_id_buku; // berbagi nilai antar semua objek
+struct Buku {
+    unsigned int id;
+    string judul;
+    string penulis;
+    int tahun_terbit;
+    static unsigned int last_id_buku; // berbagi nilai antar semua objek
+
+    // Constructor to initialize the id
+    Buku() : id(++last_id_buku) {}
 };
-unsigned int Buku::last_id_buku = 110; 
+unsigned int Buku::last_id_buku = 110;
 
 struct Pekerjaan {
-  string role;
+    string role;
 };
 
-struct Anggota{
-  unsigned int id = ++last_id_anggota; 
-  Pekerjaan role;
-  string nama; //struct dalam struct ada mahasiswa, dosen, pegawai jangan langsung nama. nanti dipanggil id nya 
-  string alamat;
-  char telepon[15];
-  static unsigned int last_id_anggota;
+struct Anggota {
+    unsigned int id;
+    Pekerjaan role;
+    string nama;
+    string alamat;
+    char telepon[15];
+    static unsigned int last_id_anggota;
+
+    // Constructor to initialize the id
+    Anggota() : id(++last_id_anggota) {}
 };
 unsigned int Anggota::last_id_anggota = 120;
 
-struct Peminjaman{
-  unsigned int idPeminjam = ++last_id_peminjam;
-  string judul_buku;
-  string nama_anggota;
-  string tanggal_pinjam;
-  string tanggal_kembali;
-  static unsigned int last_id_peminjam;
+struct Peminjaman {
+    unsigned int idPeminjam;
+    string judul_buku;
+    string nama_anggota;
+    string tanggal_pinjam;
+    string tanggal_kembali;
+    static unsigned int last_id_peminjam;
+
+    // Constructor to initialize the idPeminjam
+    Peminjaman() : idPeminjam(++last_id_peminjam) {}
 };
 unsigned int Peminjaman::last_id_peminjam = 310;
 
@@ -92,41 +101,48 @@ Peminjaman daftarPeminjaman[100];
 // Pengguna masuk[10];
 int jumlahBuku = 0, jumlahAnggota = 0, jumlahPeminjaman = 0;
 bool check; // check ID in func create peminjaman 
-int main(){
-  login();
-  return 0;
+int main() {
+    while (true) { // Keep the application running until the user exits
+        login();
+    }
+    return 0;
 }
 
-void login(){
-  int pilih;
-  cout << "Login sebagai :" << endl;
-  cout << "1. User" << endl;
-  cout << "2. Admin" << endl;
-  cout << "Jawab : " ; cin >> pilih;
+void login() {
+    int pilih;
+    cout << "Login sebagai:" << endl;
+    cout << "1. User" << endl;
+    cout << "2. Admin" << endl;
+    cout << "3. Exit" << endl;
+    cout << "Jawab: ";
+    cin >> pilih;
 
-  switch(pilih){
-    case 1 : 
-      user();
-      break;
-    case 2 :
-      admin();
-      break;
-    default :
-      cout << "Input tidak valid." << endl;
-      break;
-  }
+    switch (pilih) {
+        case 1:
+            user(); // Proceed to user menu
+            break;
+        case 2:
+            admin(); // Proceed to admin menu
+            break;
+        case 3:
+            cout << "Terima kasih telah menggunakan aplikasi ini." << endl;
+            exit(0); // Exit the application
+        default:
+            cout << "Input tidak valid." << endl;
+            break;
+    }
 }
 
-void user(){
-  int pilih, attempts = 0;
-  string username, password;
-  cout << "Welcome" << endl;
-  do {
+void user() {
+    int pilih, attempts = 0;
+    string username, password;
+    cout << "Welcome" << endl;
+    do {
         cout << "=== Login ===\n";
         cin.ignore();
-        cout << "\nUsername\t: "; 
+        cout << "\nUsername\t: ";
         getline(cin, username);
-        cout << "Password\t: "; 
+        cout << "Password\t: ";
         getline(cin, password);
 
         if (username != "user") {
@@ -141,24 +157,24 @@ void user(){
 
         if (attempts >= 3) {
             cout << "Kesempatan habis. Anda tidak bisa masuk.\n\n";
-            return ;
+            return; // Return to the login screen
         } else {
             cout << "Tersisa " << 3 - attempts << " kali kesempatan\n\n";
         }
     } while (true);
-    menu_user();
+    menu_user(); // Proceed to user menu
 }
 
-void admin(){
-  int pilih, attempts = 0;
-  string username, password;
-  cout << "Welcome" << endl;
-  do {
+void admin() {
+    int pilih, attempts = 0;
+    string username, password;
+    cout << "Welcome" << endl;
+    do {
         cout << "=== Login ===\n";
         cin.ignore();
-        cout << "\nUsername\t: "; 
+        cout << "\nUsername\t: ";
         getline(cin, username);
-        cout << "Password\t: "; 
+        cout << "Password\t: ";
         getline(cin, password);
 
         if (username != "admin") {
@@ -173,92 +189,114 @@ void admin(){
 
         if (attempts >= 3) {
             cout << "Kesempatan habis. Anda tidak bisa masuk.\n\n";
-            return ;
+            return; // Return to the login screen
         } else {
             cout << "Tersisa " << 3 - attempts << " kali kesempatan\n\n";
         }
     } while (true);
-    menu_admin();
+    menu_admin(); // Proceed to admin menu
 }
 
-void menu_user(){
-  int pilih;
-  char jawab;
+void menu_user() {
+    int pilih;
+    char jawab;
 
-  do{
-    cout << "\nWelcome" << endl;
-    cout << "1. Create data diri " << endl;
-    cout << "2. Lihat peminjaman" << endl;
-    cout << "3. Exit" << endl;
-    cout << "Pilih menu : ";
-    cin >> pilih;
+    do {
+        cout << "\nWelcome" << endl;
+        cout << "1. Create data diri" << endl;
+        cout << "2. Lihat peminjaman" << endl;
+        cout << "3. Logout" << endl; // Changed "Exit" to "Logout"
+        cout << "Pilih menu: ";
+        cin >> pilih;
 
-    switch(pilih){
-      case 1:
-        menu_create_user();
-        break;
-      case 2:
-         if (jumlahPeminjaman == 0) {
-              cout << "Tidak ada data peminjaman." << endl;
-          } else {
-              menu_read_user();
-          }
-        break;
-      case 3:
-        login();
-        break;
-      default:
-        cout << "Input tidak valid" << endl;
-        break;
-    }
-    cout << "Ingin lanjut (y/n): ";
-    cin >> jawab;
-  }while(jawab == 'y');
+        switch (pilih) {
+            case 1:
+                menu_create_user();
+                break;
+            case 2:
+                if (jumlahPeminjaman == 0) {
+                    cout << "Tidak ada data peminjaman." << endl;
+                } else {
+                    menu_read_user();
+                }
+                break;
+            case 3:
+                cout << "Anda telah logout." << endl;
+                return; // Return to the login screen
+            default:
+                cout << "Input tidak valid" << endl;
+                break;
+        }
+        cout << "Ingin lanjut (y/n): ";
+        cin >> jawab;
+    } while (jawab == 'y');
 }
 
-void menu_admin(){
-  int choose;
-  char jawab;
-  do{
-    cout << "\nWelcome" << endl;
-    cout << "1. Create " << endl;
-    cout << "2. Read " << endl;
-    cout << "3. Sorting " << endl;
-    cout << "4. Delete " << endl;
-    cout << "5. Update " << endl;
-    cout << "6. Search" << endl;
-    cout << "7. Exit" << endl;
-    cout << "Pilih menu : ";
-    cin >> choose;
+void menu_admin() {
+    int choose;
+    char jawab;
 
-    switch(choose){
-      case 1:
-        menu_Create();
-        break;
-      case 2:
-        menu_Read();
-        break;
-      case 3:
-        menu_sorting();
-        break;
-      case 4:
-        delete_buku();
-        break;
-      case 5:
-        break;
-      case 6:
-         menu_search();
-        break;
-      case 7:
-         login();
-        break;
-      default:
-        cout << "Input tidak valid" << endl;
-        break;
-    }
-    cout << "Ingin lanjut (y/n): ";
-    cin >> jawab;
-  }while(jawab == 'y');
+    do {
+        cout << "\nWelcome" << endl;
+        cout << "1. Create" << endl;
+        cout << "2. Read" << endl;
+        cout << "3. Sorting" << endl;
+        cout << "4. Delete" << endl;
+        cout << "5. Update" << endl;
+        cout << "6. Search" << endl;
+        cout << "7. Logout" << endl; // Changed "Exit" to "Logout"
+        cout << "Pilih menu: ";
+        cin >> choose;
+
+        switch (choose) {
+            case 1:
+                menu_Create();
+                break;
+            case 2:
+                menu_Read();
+                break;
+            case 3:
+                menu_sorting();
+                break;
+            case 4:
+                delete_buku();
+                break;
+            case 5:
+                int updateChoice;
+                cout << "\nMenu Update" << endl;
+                cout << "1. Update Buku" << endl;
+                cout << "2. Update Anggota" << endl;
+                cout << "3. Update Peminjaman" << endl;
+                cout << "Pilih menu: ";
+                cin >> updateChoice;
+                switch (updateChoice) {
+                    case 1:
+                        update_buku();
+                        break;
+                    case 2:
+                        update_anggota();
+                        break;
+                    case 3:
+                        update_peminjaman();
+                        break;
+                    default:
+                        cout << "Input tidak valid" << endl;
+                        break;
+                }
+                break;
+            case 6:
+                menu_search();
+                break;
+            case 7:
+                cout << "Anda telah logout." << endl;
+                return; // Return to the login screen
+            default:
+                cout << "Input tidak valid" << endl;
+                break;
+        }
+        cout << "Ingin lanjut (y/n): ";
+        cin >> jawab;
+    } while (jawab == 'y');
 }
 
 void menu_create_user(){
@@ -712,6 +750,134 @@ void delete_buku(){
   if (!found) {
     cout << "Buku tidak ditemukan." << endl;
   }
+}
+
+void update_buku() {
+    string keyword;
+    cout << "\nUpdate Buku" << endl;
+    cout << "Masukkan judul buku yang ingin diupdate: ";
+    cin.ignore();
+    getline(cin, keyword);
+
+    bool found = false;
+    for (int i = 0; i < jumlahBuku; i++) {
+        if (daftarBuku[i].judul.find(keyword) != string::npos) {
+            found = true;
+            cout << "Id Buku\t\t: " << daftarBuku[i].id << endl;
+            cout << "Judul\t\t: " << daftarBuku[i].judul << endl;
+            cout << "Penulis\t\t: " << daftarBuku[i].penulis << endl;
+            cout << "Tahun Terbit\t: " << daftarBuku[i].tahun_terbit << endl;
+            cout << "----------------------\n";
+
+            char jawab;
+            cout << "Yakin ingin mengupdate buku ini? (y/n): ";
+            cin >> jawab;
+            if (jawab == 'y') {
+                cin.ignore();
+                cout << "Masukkan judul baru: ";
+                getline(cin, daftarBuku[i].judul);
+                cout << "Masukkan penulis baru: ";
+                getline(cin, daftarBuku[i].penulis);
+                cout << "Masukkan tahun terbit baru: ";
+                cin >> daftarBuku[i].tahun_terbit;
+                cout << "Buku berhasil diupdate." << endl;
+                return;
+            } else {
+                cout << "Update dibatalkan." << endl;
+                return;
+            }
+        }
+    }
+    if (!found) {
+        cout << "Buku dengan judul \"" << keyword << "\" tidak ditemukan." << endl;
+    }
+}
+
+void update_anggota() {
+    string keyword;
+    cout << "\nUpdate Anggota" << endl;
+    cout << "Masukkan nama anggota yang ingin diupdate: ";
+    cin.ignore();
+    getline(cin, keyword);
+
+    bool found = false;
+    for (int i = 0; i < jumlahAnggota; i++) {
+        if (daftarAnggota[i].nama.find(keyword) != string::npos) {
+            found = true;
+            cout << "Id Anggota\t: " << daftarAnggota[i].id << endl;
+            cout << "Nama\t\t: " << daftarAnggota[i].nama << endl;
+            cout << "Pekerjaan\t: " << daftarAnggota[i].role.role << endl;
+            cout << "Alamat\t\t: " << daftarAnggota[i].alamat << endl;
+            cout << "Telepon\t\t: " << daftarAnggota[i].telepon << endl;
+            cout << "----------------------\n";
+
+            char jawab;
+            cout << "Yakin ingin mengupdate anggota ini? (y/n): ";
+            cin >> jawab;
+            if (jawab == 'y') {
+                cin.ignore();
+                cout << "Masukkan nama baru: ";
+                getline(cin, daftarAnggota[i].nama);
+                cout << "Masukkan pekerjaan baru: ";
+                getline(cin, daftarAnggota[i].role.role);
+                cout << "Masukkan alamat baru: ";
+                getline(cin, daftarAnggota[i].alamat);
+                cout << "Masukkan telepon baru: ";
+                cin >> daftarAnggota[i].telepon;
+                cout << "Anggota berhasil diupdate." << endl;
+                return;
+            } else {
+                cout << "Update dibatalkan." << endl;
+                return;
+            }
+        }
+    }
+    if (!found) {
+        cout << "Anggota dengan nama \"" << keyword << "\" tidak ditemukan." << endl;
+    }
+}
+
+void update_peminjaman() {
+    int id;
+    cout << "\nUpdate Peminjaman" << endl;
+    cout << "Masukkan ID peminjaman yang ingin diupdate: ";
+    cin >> id;
+
+    bool found = false;
+    for (int i = 0; i < jumlahPeminjaman; i++) {
+        if (daftarPeminjaman[i].idPeminjam == id) {
+            found = true;
+            cout << "Id Peminjam\t: " << daftarPeminjaman[i].idPeminjam << endl;
+            cout << "Judul Buku\t: " << daftarPeminjaman[i].judul_buku << endl;
+            cout << "Nama Anggota\t: " << daftarPeminjaman[i].nama_anggota << endl;
+            cout << "Tanggal Pinjam\t: " << daftarPeminjaman[i].tanggal_pinjam << endl;
+            cout << "Tanggal Kembali\t: " << daftarPeminjaman[i].tanggal_kembali << endl;
+            cout << "----------------------\n";
+
+            char jawab;
+            cout << "Yakin ingin mengupdate peminjaman ini? (y/n): ";
+            cin >> jawab;
+            if (jawab == 'y') {
+                cin.ignore();
+                cout << "Masukkan judul buku baru: ";
+                getline(cin, daftarPeminjaman[i].judul_buku);
+                cout << "Masukkan nama anggota baru: ";
+                getline(cin, daftarPeminjaman[i].nama_anggota);
+                cout << "Masukkan tanggal pinjam baru: ";
+                getline(cin, daftarPeminjaman[i].tanggal_pinjam);
+                cout << "Masukkan tanggal kembali baru: ";
+                getline(cin, daftarPeminjaman[i].tanggal_kembali);
+                cout << "Peminjaman berhasil diupdate." << endl;
+                return;
+            } else {
+                cout << "Update dibatalkan." << endl;
+                return;
+            }
+        }
+    }
+    if (!found) {
+        cout << "Peminjaman dengan ID \"" << id << "\" tidak ditemukan." << endl;
+    }
 }
 
 
