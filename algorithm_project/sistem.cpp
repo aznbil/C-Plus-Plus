@@ -259,7 +259,7 @@ void menu_admin() {
                 menu_sorting();
                 break;
             case 4:
-                delete_buku();
+                menu_Delete();
                 break;
             case 5:
                 int updateChoice;
@@ -471,8 +471,8 @@ void read_peminjaman(int index = 0){
   }
   if(index >= jumlahPeminjaman) return;
   cout << "Id Peminjam\t: " << daftarPeminjaman[index].idPeminjam << endl;
-  cout << "Id Buku\t\t: " << daftarPeminjaman[index].judul_buku << endl;
-  cout << "Id Anggota\t: " << daftarPeminjaman[index].nama_anggota << endl;
+  cout << "Judul Buku\t: " << daftarPeminjaman[index].judul_buku << endl;
+  cout << "Nama Anggota\t: " << daftarPeminjaman[index].nama_anggota << endl;
   cout << "Tanggal Pinjam\t: " << daftarPeminjaman[index].tanggal_pinjam << endl;
   cout << "Tanggal Kembali\t: " << daftarPeminjaman[index].tanggal_kembali << endl;
   cout << "----------------------\n";
@@ -715,6 +715,30 @@ void search_peminjaman() {
   }
 }
 
+void menu_Delete(){
+  int pilih;
+  cout << "\nMenu Delete" << endl;
+  cout << "1. Delete Buku" << endl;
+  cout << "2. Delete Anggota" << endl;
+  cout << "3. Delete Peminjaman" << endl;
+  cout << "Pilih menu: ";
+  cin >> pilih;
+  switch (pilih) {
+      case 1:
+          delete_buku();
+          break;
+      case 2:
+          delete_anggota();
+          break;
+      case 3:
+          delete_peminjaman();
+          break;
+      default:
+          cout << "Input tidak valid" << endl;
+          break;
+  }
+}
+
 void delete_buku(){
   char jawab;
   string kill_judul;
@@ -749,6 +773,83 @@ void delete_buku(){
   }
   if (!found) {
     cout << "Buku tidak ditemukan." << endl;
+  }
+}
+
+void delete_anggota(){
+  char jawab;
+  string kill_name;
+  cin.ignore();
+  cout << "\nKill Anggota" << endl;
+  cout << "Masukkan nama anggota : "; 
+  getline(cin, kill_name);
+
+  bool found = false;
+  for (int i = 0; i <=jumlahBuku; i++) {
+    if (daftarAnggota[i].nama.find(kill_name) != string::npos) {
+        cout << "Id Anggota\t: " << daftarAnggota[i].id << endl;
+        cout << "Nama\t\t: " << daftarAnggota[i].nama << endl;
+        cout << "Pekerjaan\t: " << daftarAnggota[i].role.role << endl;
+        cout << "Alamat\t\t: " << daftarAnggota[i].alamat << endl;
+        cout << "Telepon\t\t: " << daftarAnggota[i].telepon << endl;
+        cout << "----------------------\n";
+        cout << "Yakin ingin menghapus? (y/n) : ";
+        cin >> jawab;
+        if(jawab == 'y'){
+          daftarAnggota[i].id = daftarAnggota[i+1].id;
+          daftarAnggota[i].nama = daftarAnggota[i+1].nama;
+          daftarAnggota[i].role.role = daftarAnggota[i+1].role.role;
+          daftarAnggota[i].alamat = daftarAnggota[i+1].alamat;
+          daftarAnggota[i].telepon == daftarAnggota[i+1].telepon;
+          cout << "Buku berhasil dihapus." << endl;
+          found = true;
+          jumlahAnggota--;
+        }
+        else{
+          return menu_admin();
+        }
+    }
+  }
+  if (!found) {
+    cout << "Anggota tidak ditemukan." << endl;
+  }
+}
+
+void delete_peminjaman(){
+  int id;
+  char jawab;
+  cout << "Masukkan ID peminjam: ";
+  cin >> id;
+
+  bool found = false;
+  for (int i = 0; i < jumlahPeminjaman; i++) {
+    if (daftarPeminjaman[i].idPeminjam == id) {
+      cout << "Id Peminjam\t: " << daftarPeminjaman[i].idPeminjam << endl;
+      cout << "Judul Buku\t: " << daftarPeminjaman[i].judul_buku << endl;
+      cout << "Nama Anggota\t: " << daftarPeminjaman[i].nama_anggota << endl;
+      cout << "Tanggal Pinjam\t: " << daftarPeminjaman[i].tanggal_pinjam << endl;
+      cout << "Tanggal Kembali\t: " << daftarPeminjaman[i].tanggal_kembali << endl;
+      cout << "----------------------" << endl;
+      cout << "Yakin ingin menghapus? (y/n) : ";
+        cin >> jawab;
+        if(jawab == 'y'){
+          daftarPeminjaman[i].idPeminjam = daftarPeminjaman[i+1].idPeminjam;
+          daftarPeminjaman[i].judul_buku = daftarPeminjaman[i+1].judul_buku;
+          daftarPeminjaman[i].nama_anggota = daftarPeminjaman[i+1].nama_anggota;
+          daftarPeminjaman[i].tanggal_pinjam = daftarPeminjaman[i+1].tanggal_pinjam;
+          daftarPeminjaman[i].tanggal_kembali = daftarPeminjaman[i+1].tanggal_kembali;
+          cout << "Buku berhasil dihapus." << endl;
+          found = true;
+          jumlahPeminjaman--;
+        }
+        else{
+          return menu_admin();
+        }
+      found = true;
+    }
+  }
+  if (!found) {
+    cout << "Data peminjaman tidak ditemukan." << endl;
   }
 }
 
