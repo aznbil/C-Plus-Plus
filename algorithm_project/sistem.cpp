@@ -1,51 +1,70 @@
 #include <iostream>
 using namespace std;
+// unsigned = angka positif saja, tanpa negatif
 
 struct Buku{
-  int id;
+  unsigned int id = ++last_id_buku;
   string judul;
   string penulis;
   int tahun_terbit;
+  static unsigned int last_id_buku; // berbagi nilai antar semua objek
 };
+unsigned int Buku::last_id_buku = 110; 
 
 struct Pekerjaan {
   string role;
 };
 
 struct Anggota{
-  int id; 
+  unsigned int id = ++last_id_anggota; 
   Pekerjaan role;
   string nama; //struct dalam struct ada mahasiswa, dosen, pegawai jangan langsung nama. nanti dipanggil id nya 
   string alamat;
   char telepon[15];
-  };
-
+  static unsigned int last_id_anggota;
+};
+unsigned int Anggota::last_id_anggota = 120;
 
 struct Peminjaman{
-  int idPeminjam;
-  int idBuku;
-  int idAnggota;
+  unsigned int idPeminjam = ++last_id_peminjam;
+  string judul_buku;
+  string nama_anggota;
   string tanggal_pinjam;
   string tanggal_kembali;
+  static unsigned int last_id_peminjam;
 };
+unsigned int Peminjaman::last_id_peminjam = 310;
 
-// ini bagian untuk menu
-void menu();
-void menu_Create();
-void menu_Read();
+// struct Pengguna{
+//   string username;
+//   string password;
+// };
+
+
+// ini bagian untuk main
+void menu_admin();
+void menu_user();
+void login();
+void admin();
+void user();
+
 void menu_Update();
 void menu_Delete();
-void menu_sorting();
+
 
 // ini bagian untuk membuat data
+void menu_Create();
+void menu_create_user();
 void create_buku();
 void create_anggota();
 void create_peminjaman();
 
 // ini bagian untuk membaca data
+void menu_Read();
 void read_buku(int index);
 void read_anggota(int index);
 void read_peminjaman(int index);
+void menu_read_user();
 
 // ini bagian untuk memperbarui data
 void update_buku();
@@ -57,26 +76,147 @@ void delete_buku();
 void delete_anggota();
 void delete_peminjaman();
 
+void menu_sorting();
 void sorting_buku_tahunTerbit_DESC();
 void sorting_anggota();
 void sorting_peminjaman();
 
+void menu_search();
 void search_buku();
 void search_anggota();
 void search_peminjaman();
-void menu_search();
 
 Buku daftarBuku[100];
 Anggota daftarAnggota[100];
 Peminjaman daftarPeminjaman[100];
+// Pengguna masuk[10];
 int jumlahBuku = 0, jumlahAnggota = 0, jumlahPeminjaman = 0;
-
+bool check; // check ID in func create peminjaman 
 int main(){
-  menu();
+  login();
   return 0;
 }
 
-void menu(){
+void login(){
+  int pilih;
+  cout << "Login sebagai :" << endl;
+  cout << "1. User" << endl;
+  cout << "2. Admin" << endl;
+  cout << "Jawab : " ; cin >> pilih;
+
+  switch(pilih){
+    case 1 : 
+      user();
+      break;
+    case 2 :
+      admin();
+      break;
+    default :
+      cout << "Input tidak valid." << endl;
+      break;
+  }
+}
+
+void user(){
+  int pilih, attempts = 0;
+  string username, password;
+  cout << "Welcome" << endl;
+  do {
+        cout << "=== Login ===\n";
+        cin.ignore();
+        cout << "\nUsername\t: "; 
+        getline(cin, username);
+        cout << "Password\t: "; 
+        getline(cin, password);
+
+        if (username != "user") {
+            cout << "Username tidak ditemukan\n";
+            attempts++;
+        } else if (password != "123") {
+            cout << "Password yang Anda masukkan salah\n";
+            attempts++;
+        } else {
+            break;
+        }
+
+        if (attempts >= 3) {
+            cout << "Kesempatan habis. Anda tidak bisa masuk.\n\n";
+            return ;
+        } else {
+            cout << "Tersisa " << 3 - attempts << " kali kesempatan\n\n";
+        }
+    } while (true);
+    menu_user();
+}
+
+void admin(){
+  int pilih, attempts = 0;
+  string username, password;
+  cout << "Welcome" << endl;
+  do {
+        cout << "=== Login ===\n";
+        cin.ignore();
+        cout << "\nUsername\t: "; 
+        getline(cin, username);
+        cout << "Password\t: "; 
+        getline(cin, password);
+
+        if (username != "admin") {
+            cout << "Username tidak ditemukan\n";
+            attempts++;
+        } else if (password != "admin1234") {
+            cout << "Password yang Anda masukkan salah\n";
+            attempts++;
+        } else {
+            break;
+        }
+
+        if (attempts >= 3) {
+            cout << "Kesempatan habis. Anda tidak bisa masuk.\n\n";
+            return ;
+        } else {
+            cout << "Tersisa " << 3 - attempts << " kali kesempatan\n\n";
+        }
+    } while (true);
+    menu_admin();
+}
+
+void menu_user(){
+  int pilih;
+  char jawab;
+
+  do{
+    cout << "\nWelcome" << endl;
+    cout << "1. Create data diri " << endl;
+    cout << "2. Lihat peminjaman" << endl;
+    cout << "3. Exit" << endl;
+    cout << "Pilih menu : ";
+    cin >> pilih;
+
+    switch(pilih){
+      case 1:
+        menu_create_user();
+        break;
+      case 2:
+         if (jumlahPeminjaman == 0) {
+              cout << "Tidak ada data peminjaman." << endl;
+          } else {
+              menu_read_user();
+          }
+        break;
+      case 3:
+        login();
+        break;
+      default:
+        cout << "Input tidak valid" << endl;
+        break;
+    }
+    cout << "Ingin lanjut (y/n): ";
+    cin >> jawab;
+  }while(jawab == 'y');
+}
+
+void menu_admin(){
   int choose;
   char jawab;
   do{
@@ -102,6 +242,7 @@ void menu(){
         menu_sorting();
         break;
       case 4:
+        delete_buku();
         break;
       case 5:
         break;
@@ -109,7 +250,7 @@ void menu(){
          menu_search();
         break;
       case 7:
-         exit(0);
+         login();
         break;
       default:
         cout << "Input tidak valid" << endl;
@@ -120,12 +261,15 @@ void menu(){
   }while(jawab == 'y');
 }
 
+void menu_create_user(){
+  create_anggota();
+}
+
 void menu_Create(){
   int choose;
   cout << "\nMenu Create" << endl;
   cout << "1. Buku " << endl;
-  cout << "2. Anggota " << endl;
-  cout << "3. Peminjaman " << endl;
+  cout << "2. Peminjaman " << endl;
   cout << "Pilih menu : ";
   cin >> choose;
 
@@ -134,9 +278,6 @@ void menu_Create(){
       create_buku();
       break;
     case 2:
-      create_anggota();
-      break;
-    case 3:
       create_peminjaman();
       break;
     default:
@@ -161,8 +302,7 @@ void create_buku(){
 
   for (int i = jumlahBuku ; i < dataygdiinput + jumlahBuku; i++){
     cout << "Buku ke-" << i + 1 << endl;
-    cout << "Id buku\t\t: ";
-    cin >> daftarBuku[i].id;
+    cout << "Id buku\t\t: " << daftarBuku[i].id << endl;
     cin.ignore();
     cout << "Judul buku\t: ";
     getline(cin, daftarBuku[i].judul);
@@ -190,8 +330,7 @@ void create_anggota(){
 
   for (int i = jumlahAnggota; i < dataygdiinput + jumlahAnggota; i++){
   cout << "Anggota ke-" << i + 1 << endl;
-  cout << "Id anggota\t: ";
-  cin >> daftarAnggota[i].id;
+  // cout << "Id anggota\t: " << daftarAnggota[i].id << endl;
   cin.ignore();
   cout << "Nama anggota\t: ";
   getline(cin, daftarAnggota[i].nama);
@@ -220,23 +359,38 @@ void create_peminjaman(){
   }
 
   for (int i = jumlahPeminjaman; i < dataygdiinput + jumlahPeminjaman; i++){  
-  cout << "Id peminjam\t: ";
-  cin >> daftarPeminjaman[i].idPeminjam;
+  cout << "Id peminjam\t: " << daftarPeminjaman[i].idPeminjam << endl;
   cin.ignore();
-  cout << "Id buku\t\t: ";
-  cin >> daftarPeminjaman[i].idBuku;
+  do{
+  check = false;
+  cout << "Judul buku\t: ";
+  cin >> daftarPeminjaman[i].judul_buku;
   cin.ignore();
-  if(daftarPeminjaman[i].idBuku != daftarBuku->id){ // error handling jika id buku tidak ditemukan
-    cout << "ID buku tidak ditemukan!\n";
-    break;
-  }else
-  cout << "Id anggota\t: ";
-  cin >> daftarPeminjaman[i].idAnggota;
+  for(int j = 0; j < jumlahBuku; j++){
+    if(daftarPeminjaman[i].judul_buku == daftarBuku[j].judul){
+      check = true;
+      break;
+    }
+  }
+  if(!check){
+    cout << "Buku tidak ditemukan." << endl;
+  }
+  }while(!check);
+  do{
+  check = false;
+  cout << "Nama anggota\t: ";
+  cin >> daftarPeminjaman[i].nama_anggota;
   cin.ignore();
-  if(daftarPeminjaman[i].idAnggota != daftarAnggota->id){ // error handling jika id anggota tidak ditemukan 
-    cout << "ID anggota tidak ditemukan!\n";
-    break;
-  }else
+  for(int j = 0; j < jumlahAnggota; j++){
+    if(daftarPeminjaman[i].nama_anggota == daftarAnggota[j].nama){
+      check = true;
+      break;
+    }
+  }
+  if(!check){
+    cout << "Anggota tidak ditemukan." << endl;
+  }
+  }while(!check);
   cout << "Tanggal pinjam\t: ";
   getline(cin, daftarPeminjaman[i].tanggal_pinjam);
   cout << "Tanggal kembali\t: ";
@@ -279,12 +433,38 @@ void read_peminjaman(int index = 0){
   }
   if(index >= jumlahPeminjaman) return;
   cout << "Id Peminjam\t: " << daftarPeminjaman[index].idPeminjam << endl;
-  cout << "Id Buku\t\t: " << daftarPeminjaman[index].idBuku << endl;
-  cout << "Id Anggota\t: " << daftarPeminjaman[index].idAnggota << endl;
+  cout << "Id Buku\t\t: " << daftarPeminjaman[index].judul_buku << endl;
+  cout << "Id Anggota\t: " << daftarPeminjaman[index].nama_anggota << endl;
   cout << "Tanggal Pinjam\t: " << daftarPeminjaman[index].tanggal_pinjam << endl;
   cout << "Tanggal Kembali\t: " << daftarPeminjaman[index].tanggal_kembali << endl;
   cout << "----------------------\n";
   read_peminjaman(index + 1);
+}
+
+void menu_read_user(){
+  string nama;
+  cin.ignore();
+  cout << "Masukkan nama anda : " ; 
+  cin >> nama;
+
+  //salinan peminjaman
+  Peminjaman salinan_peminjam[100];
+  bool found = false;
+  for(int i = 0; i < jumlahPeminjaman; i++){
+    salinan_peminjam[i] = daftarPeminjaman[i];
+    if(daftarPeminjaman[i].nama_anggota.find(nama) != string::npos){
+    cout << "Id Peminjam\t: " << salinan_peminjam[i].idPeminjam << endl;
+    cout << "Judul Buku\t: " << salinan_peminjam[i].judul_buku << endl;
+    cout << "Nama Anggota\t: " << salinan_peminjam[i].nama_anggota << endl;
+    cout << "Tanggal Pinjam\t: " << salinan_peminjam[i].tanggal_pinjam << endl;
+    cout << "Tanggal Kembali\t: " << salinan_peminjam[i].tanggal_kembali << endl;
+    cout << "----------------------\n";
+    found = true;
+    }
+  }
+  if (!found) {
+    cout << "Data peminjaman tidak ditemukan." << endl;
+  }
 }
 
 void menu_Read(){
@@ -325,14 +505,26 @@ void menu_Read(){
 }
 
 void sorting_buku_tahunTerbit_DESC(){
+  // buat salinan array, agar setelah di sorting tidak mempengaruhi di func menu read
+  Buku salinan_buku[100];
+  for(int i = 0; i < jumlahBuku; i++){
+    salinan_buku[i] = daftarBuku[i];
+  }
+
   for(int i = 0; i < jumlahBuku; i++){
     for (int j = 0; j < jumlahBuku - i - 1; j++){
-      if (daftarBuku[j].tahun_terbit < daftarBuku[j + 1].tahun_terbit){
-        swap(daftarBuku[j], daftarBuku[j + 1]);
+      if (salinan_buku[j].tahun_terbit < salinan_buku[j + 1].tahun_terbit){
+        swap(salinan_buku[j], salinan_buku[j + 1]);
       }
     }
   }
-  read_buku();
+  for(int i = 0; i < jumlahBuku; i++){
+    cout << "Id Buku\t\t: " << salinan_buku[i].id << endl;
+    cout << "Judul\t\t: " << salinan_buku[i].judul << endl;
+    cout << "Penulis\t\t: " << salinan_buku[i].penulis << endl;
+    cout << "Tahun Terbit\t: " << salinan_buku[i].tahun_terbit << endl;
+    cout << "----------------------\n";
+  }
 }
 
 void sorting_anggota(){// acending
@@ -472,8 +664,8 @@ void search_peminjaman() {
   for (int i = 0; i < jumlahPeminjaman; i++) {
     if (daftarPeminjaman[i].idPeminjam == id) {
       cout << "Id Peminjam: " << daftarPeminjaman[i].idPeminjam << endl;
-      cout << "Id Buku: " << daftarPeminjaman[i].idBuku << endl;
-      cout << "Id Anggota: " << daftarPeminjaman[i].idAnggota << endl;
+      cout << "Id Buku: " << daftarPeminjaman[i].judul_buku << endl;
+      cout << "Id Anggota: " << daftarPeminjaman[i].nama_anggota << endl;
       cout << "Tanggal Pinjam: " << daftarPeminjaman[i].tanggal_pinjam << endl;
       cout << "Tanggal Kembali: " << daftarPeminjaman[i].tanggal_kembali << endl;
       cout << "----------------------" << endl;
@@ -482,6 +674,43 @@ void search_peminjaman() {
   }
   if (!found) {
     cout << "Data peminjaman tidak ditemukan." << endl;
+  }
+}
+
+void delete_buku(){
+  char jawab;
+  string kill_judul;
+  cin.ignore();
+  cout << "\nDelete Book" << endl;
+  cout << "Masukkan judul buku : "; 
+  getline(cin, kill_judul);
+
+  bool found = false;
+  for (int i = 0; i <=jumlahBuku; i++) {
+    if (daftarBuku[i].judul.find(kill_judul) != string::npos) {
+        cout << "Id Buku\t\t: " << daftarBuku[i].id << endl;
+        cout << "Judul\t\t: " << daftarBuku[i].judul << endl;
+        cout << "Penulis\t\t: " << daftarBuku[i].penulis << endl;
+        cout << "Tahun Terbit\t: " << daftarBuku[i].tahun_terbit << endl;
+        cout << "----------------------\n";
+        cout << "Yakin ingin menghapus? (y/n) : ";
+        cin >> jawab;
+        if(jawab == 'y'){
+          daftarBuku[i].id = daftarBuku[i+1].id;
+          daftarBuku[i].judul = daftarBuku[i+1].judul;
+          daftarBuku[i].penulis = daftarBuku[i+1].penulis;
+          daftarBuku[i].tahun_terbit = daftarBuku[i+1].tahun_terbit;
+          cout << "Buku berhasil dihapus." << endl;
+          found = true;
+          jumlahBuku--;
+        }
+        else{
+          return menu_admin();
+        }
+    }
+  }
+  if (!found) {
+    cout << "Buku tidak ditemukan." << endl;
   }
 }
 
