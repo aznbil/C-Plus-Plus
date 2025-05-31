@@ -46,6 +46,14 @@ struct Peminjaman {
 };
 unsigned int Peminjaman::last_id_peminjam = 310;
 
+struct Login{
+  string 
+    username,
+    password,
+    peran;
+};
+
+
 void menu_admin();
 void menu_user();
 
@@ -92,14 +100,18 @@ void search_anggota();
 void search_peminjaman();
 
 void read_file();
+void read_fileAkun();
 void read_fileBuku();
 void read_fileAnggota();
 void read_filePeminjaman();
 
+bool checkUsername(string username);
+
+Login UsAd[100];// UsAd = user admin
 Buku daftarBuku[100];
 Anggota daftarAnggota[100];
 Peminjaman daftarPeminjaman[100];
-int jumlahBuku = 0, jumlahAnggota = 0, jumlahPeminjaman = 0;
+int jumlahBuku = 0, jumlahAnggota = 0, jumlahPeminjaman = 0, jumlahAkun = 0;
 bool check; // check ID in func create peminjaman 
 int main() {
     while (true) { // Keep the application running until the user exits
@@ -110,9 +122,28 @@ int main() {
 }
 
 void read_file(){
+  read_fileAkun();
   read_fileBuku();
   read_fileAnggota();
   read_filePeminjaman();
+}
+
+void read_fileAkun(){
+  ifstream myfile("jumlahakun");
+  if(myfile.is_open()){
+    myfile >> jumlahAkun;
+    myfile.close();
+  }
+
+  ifstream file("akun.txt");
+  if(file.is_open()){
+    for(int i = 0; i < jumlahAkun; i++){
+      file >> UsAd[i].username;
+      file >> UsAd[i].password;
+      file >> UsAd[i].peran;
+    }
+    file.close();
+  }
 }
 
 void read_fileBuku(){
@@ -246,7 +277,7 @@ void login(){
 }
 
 void buat_akun(){
-  string peran, password, username;
+  string peran, username;
   int siapa;
   cout << "Peran " << endl;
   cout << "1. user " << endl;
@@ -255,25 +286,37 @@ void buat_akun(){
   cout << "siapa anda? : ";
   cin>>siapa;
     if(siapa == 1){
-      peran = "user";
+      UsAd[jumlahAkun].peran = "user";
     }
     else {
-      peran = "admin";
+      UsAd[jumlahAkun].peran = "admin";
     }
+    //check username
+    bool check = false;
+    do{
     cout    <<"Masukan Username Anda : ";
-    cin     >>username;
+    cin     >> username;
+    if(checkUsername(username)){
+      cout << "Username sudah ada!" << endl;
+    }else{
+      check = true;
+      UsAd[jumlahAkun].username = username;
+    }
+    }while(!check);
+
     cout    <<"Masukan Password Anda : ";
-    cin     >>password;
+    cin     >> UsAd[jumlahAkun].password;
 
     ofstream akun;
     akun.open("akun.txt", ios::app);
-    akun    << username;
+    akun    << UsAd[jumlahAkun].username;
     akun    << endl;
-    akun    << password;
+    akun    << UsAd[jumlahAkun].password;
     akun    << endl;
-    akun    << peran;
+    akun    << UsAd[jumlahAkun].peran;
     akun    << endl;
 
+    jumlahAkun ++;
     if(akun){
         cout<<"\nSelamat Akun anda sudah di buat"<<endl;
         cout<<"Silahkan Lanjut ke menu login"<<endl;
@@ -282,6 +325,21 @@ void buat_akun(){
         cout<<"Terjadi kesalahan, silahkan coba lagi"<<endl;
     }
     akun.close();
+
+    ofstream myfile("jumlahakun");
+    if(myfile.is_open()){
+      myfile << jumlahAkun;
+      myfile.close();
+    }
+}
+
+bool checkUsername(string username){
+  for(int i = 0; i < jumlahAkun; i++){
+    if(UsAd[i].username == username){
+      return true;
+    }
+  }
+  return false;
 }
 
 void menu_user() {
@@ -1060,6 +1118,15 @@ void update_buku() {
                 cout << "Masukkan tahun terbit baru: ";
                 cin >> daftarBuku[i].tahun_terbit;
                 cout << "Buku berhasil diupdate." << endl;
+
+                ofstream book("dataBuku.txt", ios::trunc);
+                if(book.is_open()){
+                  book << daftarBuku[i].id << endl;
+                  book << daftarBuku[i].judul << endl;
+                  book << daftarBuku[i].penulis << endl;
+                  book << daftarBuku[i].tahun_terbit << endl;
+                  book.close();
+                }
                 return;
             } else {
                 cout << "Update dibatalkan." << endl;
@@ -1104,6 +1171,16 @@ void update_anggota() {
                 cout << "Masukkan telepon baru: ";
                 cin >> daftarAnggota[i].telepon;
                 cout << "Anggota berhasil diupdate." << endl;
+
+                ofstream anggota("dataAnggota.txt", ios::trunc);
+                if(anggota.is_open()){
+                  anggota << daftarAnggota[i].id << endl;
+                  anggota << daftarAnggota[i].nama << endl;
+                  anggota << daftarAnggota[i].role.role << endl;
+                  anggota << daftarAnggota[i].alamat << endl;
+                  anggota << daftarAnggota[i].telepon << endl;
+                  anggota.close();
+                }
                 return;
             } else {
                 cout << "Update dibatalkan." << endl;
@@ -1147,6 +1224,16 @@ void update_peminjaman() {
                 cout << "Masukkan tanggal kembali baru: ";
                 getline(cin, daftarPeminjaman[i].tanggal_kembali);
                 cout << "Peminjaman berhasil diupdate." << endl;
+
+                ofstream borrow("dataPeminjaman.txt", ios::trunc);
+                if(borrow.is_open()){
+                  borrow << daftarPeminjaman[i].idPeminjam << endl;
+                  borrow << daftarPeminjaman[i].judul_buku << endl;
+                  borrow << daftarPeminjaman[i].nama_anggota << endl;
+                  borrow << daftarPeminjaman[i].tanggal_pinjam << endl;
+                  borrow << daftarPeminjaman[i].tanggal_kembali << endl;
+                  borrow.close();
+                }
                 return;
             } else {
                 cout << "Update dibatalkan." << endl;
