@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
 // unsigned = angka positif saja, tanpa negatif
 
@@ -31,6 +32,7 @@ struct Anggota {
 };
 unsigned int Anggota::last_id_anggota = 120;
 
+
 struct Peminjaman {
     unsigned int idPeminjam;
     string judul_buku;
@@ -44,22 +46,14 @@ struct Peminjaman {
 };
 unsigned int Peminjaman::last_id_peminjam = 310;
 
-// struct Pengguna{
-//   string username;
-//   string password;
-// };
-
-
-// ini bagian untuk main
 void menu_admin();
 void menu_user();
+
+void loginpage();
 void login();
 void admin();
 void user();
-
-void menu_Update();
-void menu_Delete();
-
+void buat_akun();
 
 // ini bagian untuk membuat data
 void menu_Create();
@@ -76,11 +70,13 @@ void read_peminjaman(int index);
 void menu_read_user();
 
 // ini bagian untuk memperbarui data
+void menu_Update();
 void update_buku();
 void update_anggota();
 void update_peminjaman();
 
 // ini bagian untuk menghapus data
+void menu_Delete();
 void delete_buku();
 void delete_anggota();
 void delete_peminjaman();
@@ -95,34 +91,110 @@ void search_buku();
 void search_anggota();
 void search_peminjaman();
 
+void read_file();
+void read_fileBuku();
+void read_fileAnggota();
+void read_filePeminjaman();
+
 Buku daftarBuku[100];
 Anggota daftarAnggota[100];
 Peminjaman daftarPeminjaman[100];
-// Pengguna masuk[10];
 int jumlahBuku = 0, jumlahAnggota = 0, jumlahPeminjaman = 0;
 bool check; // check ID in func create peminjaman 
 int main() {
     while (true) { // Keep the application running until the user exits
-        login();
+      read_file();  
+      loginpage();
     }
     return 0;
 }
 
-void login() {
+void read_file(){
+  read_fileBuku();
+  read_fileAnggota();
+  read_filePeminjaman();
+}
+
+void read_fileBuku(){
+  ifstream myfile("jumlahbuku");
+      if (myfile.is_open()) {
+        myfile >> jumlahBuku;
+        myfile.close();
+    }
+
+  ifstream file("dataBuku.txt");
+  if(file.is_open()){
+    for(int i = 0; i < jumlahBuku; i++){
+      file >> daftarBuku[i].id;
+      file.ignore();
+      getline(file, daftarBuku[i].judul);
+      getline(file, daftarBuku[i].penulis);
+      file >> daftarBuku[i].tahun_terbit;
+      file.ignore();
+    }
+    file.close();
+  }
+  
+}
+
+void read_fileAnggota(){
+  ifstream myfile("jumlahAnggota");
+      if (myfile.is_open()) {
+        myfile >> jumlahAnggota;
+        myfile.close();
+    }
+
+  ifstream file("dataAnggota.txt");
+  if(file.is_open()){
+      for(int i = 0; i < jumlahAnggota; i++){
+      file >> daftarAnggota[i].id;
+      file.ignore();
+      getline(file, daftarAnggota[i].nama);
+      getline(file, daftarAnggota[i].role.role);
+      getline(file, daftarAnggota[i].alamat);
+      file >> daftarAnggota[i].telepon;
+      file.ignore();
+    }
+      file.close();
+  }
+}
+
+void read_filePeminjaman(){
+  ifstream myfile("jumlahPeminjaman");
+      if (myfile.is_open()) {
+        myfile >> jumlahPeminjaman;
+        myfile.close();
+    }
+
+  ifstream file("dataPeminjaman.txt");
+  if(file.is_open()){
+    for(int i = 0; i < jumlahPeminjaman; i++){
+      file >> daftarPeminjaman[i].idPeminjam;
+      file.ignore();
+      getline(file, daftarPeminjaman[i].judul_buku);
+      getline(file, daftarPeminjaman[i].nama_anggota);
+      getline(file, daftarPeminjaman[i].tanggal_pinjam);
+      getline(file, daftarPeminjaman[i].tanggal_kembali);
+    }
+    file.close();
+  }
+}
+
+void loginpage() {
     int pilih;
     cout << "Login sebagai:" << endl;
-    cout << "1. User" << endl;
-    cout << "2. Admin" << endl;
+    cout << "1. Login" << endl;
+    cout << "2. Buat akun" << endl;
     cout << "3. Exit" << endl;
     cout << "Jawab: ";
     cin >> pilih;
 
     switch (pilih) {
         case 1:
-            user(); // Proceed to user menu
+            login(); // Proceed to login menu
             break;
         case 2:
-            admin(); // Proceed to admin menu
+            buat_akun(); // Proceed to create account menu
             break;
         case 3:
             cout << "Terima kasih telah menggunakan aplikasi ini." << endl;
@@ -133,68 +205,83 @@ void login() {
     }
 }
 
-void user() {
-    int pilih, attempts = 0;
-    string username, password;
-    cout << "Welcome" << endl;
-    do {
-        cout << "=== Login ===\n";
-        cin.ignore();
-        cout << "\nUsername\t: ";
-        getline(cin, username);
-        cout << "Password\t: ";
-        getline(cin, password);
+void login(){
+  string username, password;
+  string veriPass, veriUsern, veriPeran;
+  bool check = false;
 
-        if (username != "user") {
-            cout << "Username tidak ditemukan\n";
-            attempts++;
-        } else if (password != "123") {
-            cout << "Password yang Anda masukkan salah\n";
-            attempts++;
-        } else {
+    for(int i = 2 ; i >= 0 ; i--){
+        ifstream login;
+        login.open("akun.txt");
+        cout<<"\nMasukan Username anda \t: ";
+        cin>>username;
+        cout<<"Masukan Password anda \t: ";
+        cin>>password;
+        while(!login.eof()){
+            login >> veriUsern;
+            login >> veriPass;
+            login >> veriPeran;
+            if((veriUsern == username) && (veriPass == password)){
+                cout<<endl<<"anda berhasil login"<<endl<<endl;
+                check = true;
+                break;
+            }
+        }
+        if((i == 0) && (!check)){
+            cout<<"Kesempatan Login anda Habis, Silahkan Coba Kembali Lain Kali"<<endl;
+            exit(0);
+        }else if(!check){
+            cout<<"Username atau Password anda salah"<<endl;
+            cout<<"Anda Masih memiliki "<< i <<" kesempatan lagi"<<endl;
+            cout<<"Silahkan mengisi kembali"<<endl;
+            cout<<endl;
+        }
+         if (check){
             break;
         }
-
-        if (attempts >= 3) {
-            cout << "Kesempatan habis. Anda tidak bisa masuk.\n\n";
-            return; // Return to the login screen
-        } else {
-            cout << "Tersisa " << 3 - attempts << " kali kesempatan\n\n";
-        }
-    } while (true);
-    menu_user(); // Proceed to user menu
+        login.close();
+    }
+    if(veriPeran == "user")menu_user();
+    else if(veriPeran == "admin")menu_admin();
 }
 
-void admin() {
-    int pilih, attempts = 0;
-    string username, password;
-    cout << "Welcome" << endl;
-    do {
-        cout << "=== Login ===\n";
-        cin.ignore();
-        cout << "\nUsername\t: ";
-        getline(cin, username);
-        cout << "Password\t: ";
-        getline(cin, password);
+void buat_akun(){
+  string peran, password, username;
+  int siapa;
+  cout << "Peran " << endl;
+  cout << "1. user " << endl;
+  cout << "2. admin " << endl;
 
-        if (username != "admin") {
-            cout << "Username tidak ditemukan\n";
-            attempts++;
-        } else if (password != "admin1234") {
-            cout << "Password yang Anda masukkan salah\n";
-            attempts++;
-        } else {
-            break;
-        }
+  cout << "siapa anda? : ";
+  cin>>siapa;
+    if(siapa == 1){
+      peran = "user";
+    }
+    else {
+      peran = "admin";
+    }
+    cout    <<"Masukan Username Anda : ";
+    cin     >>username;
+    cout    <<"Masukan Password Anda : ";
+    cin     >>password;
 
-        if (attempts >= 3) {
-            cout << "Kesempatan habis. Anda tidak bisa masuk.\n\n";
-            return; // Return to the login screen
-        } else {
-            cout << "Tersisa " << 3 - attempts << " kali kesempatan\n\n";
-        }
-    } while (true);
-    menu_admin(); // Proceed to admin menu
+    ofstream akun;
+    akun.open("akun.txt", ios::app);
+    akun    << username;
+    akun    << endl;
+    akun    << password;
+    akun    << endl;
+    akun    << peran;
+    akun    << endl;
+
+    if(akun){
+        cout<<"\nSelamat Akun anda sudah di buat"<<endl;
+        cout<<"Silahkan Lanjut ke menu login"<<endl;
+        loginpage();
+    }else{
+        cout<<"Terjadi kesalahan, silahkan coba lagi"<<endl;
+    }
+    akun.close();
 }
 
 void menu_user() {
@@ -338,6 +425,12 @@ void create_buku(){
     return;
   }
 
+  ofstream file("dataBuku.txt", ios::app);
+  if(!file){
+      cout << "Gagal membuka file!" << endl;
+      return;
+    }
+
   for (int i = jumlahBuku ; i < dataygdiinput + jumlahBuku; i++){
     cout << "Buku ke-" << i + 1 << endl;
     cout << "Id buku\t\t: " << daftarBuku[i].id << endl;
@@ -349,38 +442,64 @@ void create_buku(){
     cout << "Tahun terbit\t: ";
     cin >> daftarBuku[i].tahun_terbit;
     cout << endl;
+
+    file << daftarBuku[i].id << endl;
+    file << daftarBuku[i].judul << endl;
+    file << daftarBuku[i].penulis << endl;
+    file << daftarBuku[i].tahun_terbit << endl;
   }
+  file.close();
+
   jumlahBuku += dataygdiinput;
+  ofstream jumlah("jumlahbuku", ios::trunc);
+  if(jumlah.is_open()){
+    jumlah << jumlahBuku;
+    jumlah.close();
+  }else{
+    cout << "Gagal menyimpan jumlah buku" << endl;
+  }
 }
 
 void create_anggota(){
-  int dataygdiinput;
-  cout << "Berapa data yang ingin di input? ";
-  cin >> dataygdiinput;
-  if(dataygdiinput + jumlahAnggota > 100){
-    cout << "Input melebihi batas" << endl;
-    return;
-  }
-  if(dataygdiinput < 1){
-    cout << "Input tidak valid" << endl;
+  if(jumlahAnggota >= 100){
+    cout << "Data Penuh" << endl;
     return;
   }
 
-  for (int i = jumlahAnggota; i < dataygdiinput + jumlahAnggota; i++){
-  cout << "Anggota ke-" << i + 1 << endl;
-  // cout << "Id anggota\t: " << daftarAnggota[i].id << endl;
+  ofstream Anggota("dataAnggota.txt", ios::app);
+  if(!Anggota){
+    cout << "Gagal membuka file!" << endl;
+    return; 
+  }
+
+  daftarAnggota[jumlahAnggota].id;
   cin.ignore();
-  cout << "Nama anggota\t: ";
-  getline(cin, daftarAnggota[i].nama);
+  cout << "Nama\t\t: ";
+  getline(cin, daftarAnggota[jumlahAnggota].nama);
   cout << "Pekerjaan\t: ";
-  getline(cin, daftarAnggota[i].role.role);
+  getline(cin, daftarAnggota[jumlahAnggota].role.role);
   cout << "Alamat\t\t: ";
-  getline(cin, daftarAnggota[i].alamat);
+  getline(cin, daftarAnggota[jumlahAnggota].alamat);
   cout << "Telepon\t\t: ";
-  cin >> daftarAnggota[i].telepon;
+  cin >> daftarAnggota[jumlahAnggota].telepon;
   cout << endl;
-}
-  jumlahAnggota += dataygdiinput;
+
+  Anggota << daftarAnggota[jumlahAnggota].id << endl;
+  Anggota << daftarAnggota[jumlahAnggota].nama << endl;
+  Anggota << daftarAnggota[jumlahAnggota].role.role << endl;
+  Anggota << daftarAnggota[jumlahAnggota].alamat << endl;
+  Anggota << daftarAnggota[jumlahAnggota].telepon << endl;
+
+  Anggota.close();
+
+  jumlahAnggota ++;
+  ofstream myfile("jumlahAnggota", ios::trunc);
+  if (myfile.is_open()) {
+        myfile << jumlahAnggota;
+        myfile.close();
+    } else {
+        cout << "Gagal menyimpan jumlah data!" << endl;
+    }
 }
 
 void create_peminjaman(){
@@ -395,10 +514,17 @@ void create_peminjaman(){
     cout << "Input tidak valid" << endl;
     return;
   }
+  
+  ofstream borrow("dataPeminjaman.txt", ios::app);
+  if(!borrow){
+      cout << "Gagal buka file\n";
+      return;
+    }
 
   for (int i = jumlahPeminjaman; i < dataygdiinput + jumlahPeminjaman; i++){  
   cout << "Id peminjam\t: " << daftarPeminjaman[i].idPeminjam << endl;
   cin.ignore();
+  
   do{
   check = false;
   cout << "Judul buku\t: ";
@@ -414,6 +540,7 @@ void create_peminjaman(){
     cout << "Buku tidak ditemukan." << endl;
   }
   }while(!check);
+
   do{
   check = false;
   cout << "Nama anggota\t: ";
@@ -429,13 +556,29 @@ void create_peminjaman(){
     cout << "Anggota tidak ditemukan." << endl;
   }
   }while(!check);
+
   cout << "Tanggal pinjam\t: ";
   getline(cin, daftarPeminjaman[i].tanggal_pinjam);
   cout << "Tanggal kembali\t: ";
   getline(cin, daftarPeminjaman[i].tanggal_kembali);
   cout << endl;
+
+  borrow << daftarPeminjaman[i].idPeminjam << endl;
+  borrow << daftarPeminjaman[i].judul_buku << endl;
+  borrow << daftarPeminjaman[i].nama_anggota << endl;
+  borrow << daftarPeminjaman[i].tanggal_pinjam << endl;
+  borrow << daftarPeminjaman[i].tanggal_kembali << endl;
   }
+  borrow.close();
+
   jumlahPeminjaman += dataygdiinput;
+  ofstream myfile("jumlahPeminjaman", ios::trunc);
+  if (myfile.is_open()) {
+        myfile << jumlahPeminjaman;
+        myfile.close();
+    } else {
+        cout << "Gagal menyimpan jumlah data!" << endl;
+    }
 }
 
 void read_buku(int index = 0){
@@ -765,6 +908,17 @@ void delete_buku(){
           cout << "Buku berhasil dihapus." << endl;
           found = true;
           jumlahBuku--;
+
+          ofstream book("dataBuku.txt", ios::trunc);
+          if(book.is_open()){
+            for(int i = 0; i < jumlahBuku; i++){
+              book << daftarBuku[i].id << endl;
+              book << daftarBuku[i].judul << endl;
+              book << daftarBuku[i].penulis << endl;
+              book << daftarBuku[i].tahun_terbit << endl;
+            }
+            book.close();
+          }
         }
         else{
           return menu_admin();
@@ -804,6 +958,18 @@ void delete_anggota(){
           cout << "Buku berhasil dihapus." << endl;
           found = true;
           jumlahAnggota--;
+
+          ofstream anggota("dataAnggota.txt", ios::trunc);
+          if(anggota.is_open()){
+            for(int i = 0; i < jumlahAnggota; i++){
+              anggota << daftarAnggota[i].id << endl;
+              anggota << daftarAnggota[i].nama << endl;
+              anggota << daftarAnggota[i].role.role << endl;
+              anggota << daftarAnggota[i].alamat << endl;
+              anggota << daftarAnggota[i].telepon << endl;
+            }
+            anggota.close();
+          }
         }
         else{
           return menu_admin();
@@ -841,6 +1007,18 @@ void delete_peminjaman(){
           cout << "Buku berhasil dihapus." << endl;
           found = true;
           jumlahPeminjaman--;
+
+          ofstream borrow("dataPeminjaman.txt", ios::trunc);
+          if(borrow.is_open()){
+            for(int i = 0; i < jumlahBuku; i++){
+              borrow << daftarPeminjaman[i].idPeminjam << endl;
+              borrow << daftarPeminjaman[i].judul_buku << endl;
+              borrow << daftarPeminjaman[i].nama_anggota << endl;
+              borrow << daftarPeminjaman[i].tanggal_pinjam << endl;
+              borrow << daftarPeminjaman[i].tanggal_kembali << endl;
+            }
+            borrow.close();
+          }
         }
         else{
           return menu_admin();
