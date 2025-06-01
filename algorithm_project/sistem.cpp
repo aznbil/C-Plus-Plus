@@ -112,7 +112,7 @@ Buku daftarBuku[100];
 Anggota daftarAnggota[100];
 Peminjaman daftarPeminjaman[100];
 int jumlahBuku = 0, jumlahAnggota = 0, jumlahPeminjaman = 0, jumlahAkun = 0;
-bool check; // check ID in func create peminjaman 
+bool check, book, anggota; // check ID in func create peminjaman 
 int main() {
     while (true) { // Keep the application running until the user exits
       read_file();  
@@ -586,8 +586,7 @@ void create_peminjaman(){
   do{
   check = false;
   cout << "Judul buku\t: ";
-  cin >> daftarPeminjaman[i].judul_buku;
-  cin.ignore();
+  getline(cin, daftarPeminjaman[i].judul_buku);
   for(int j = 0; j < jumlahBuku; j++){
     if(daftarPeminjaman[i].judul_buku == daftarBuku[j].judul){
       check = true;
@@ -602,8 +601,7 @@ void create_peminjaman(){
   do{
   check = false;
   cout << "Nama anggota\t: ";
-  cin >> daftarPeminjaman[i].nama_anggota;
-  cin.ignore();
+  getline(cin, daftarPeminjaman[i].nama_anggota);
   for(int j = 0; j < jumlahAnggota; j++){
     if(daftarPeminjaman[i].nama_anggota == daftarAnggota[j].nama){
       check = true;
@@ -1215,10 +1213,34 @@ void update_peminjaman() {
             cin >> jawab;
             if (jawab == 'y') {
                 cin.ignore();
+                do{
+                book = false;
                 cout << "Masukkan judul buku baru: ";
                 getline(cin, daftarPeminjaman[i].judul_buku);
+                for(int j = 0; j < jumlahBuku; j++){
+                  if(daftarPeminjaman[i].judul_buku == daftarBuku[j].judul){
+                      book = true;
+                      break;
+                    }
+                  }
+                  if(!book){
+                     cout << "Buku tidak ditemukan." << endl;
+                  }
+                }while(!book);
+                do{
+                anggota = false;
                 cout << "Masukkan nama anggota baru: ";
                 getline(cin, daftarPeminjaman[i].nama_anggota);
+                for(int j = 0; j < jumlahBuku; j++){
+                  if(daftarPeminjaman[i].nama_anggota == daftarAnggota[j].nama){
+                    anggota = true;
+                    break;
+                  }
+                }
+                if(!anggota){
+                  cout << "Buku tidak ditemukan." << endl;
+                }
+                }while(!anggota);
                 cout << "Masukkan tanggal pinjam baru: ";
                 getline(cin, daftarPeminjaman[i].tanggal_pinjam);
                 cout << "Masukkan tanggal kembali baru: ";
