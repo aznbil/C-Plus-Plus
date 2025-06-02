@@ -222,9 +222,6 @@ void loginpage() {
     cout << "Jawab: ";
     cin >> pilih;
 
-    system("clear"); // Clear screen after input
-    system("cls");   // Clear screen for Windows
-
     switch (pilih) {
         case 1:
             login(); // Proceed to login menu
@@ -241,44 +238,75 @@ void loginpage() {
     }
 }
 
-void login(){
-  string username, password;
-  string veriPass, veriUsern, veriPeran;
-  bool check = false;
+void login() {
+    string username, password;
+    string veriPass, veriUsern, veriPeran;
+    bool check = false;
 
-    for(int i = 2 ; i >= 0 ; i--){
-        ifstream login;
-        login.open("akun.txt");
-        cout<<"\nMasukan Username anda \t: ";
-        cin>>username;
-        cout<<"Masukan Password anda \t: ";
-        cin>>password;
-        while(!login.eof()){
-            login >> veriUsern;
-            login >> veriPass;
-            login >> veriPeran;
-            if((veriUsern == username) && (veriPass == password)){
-                cout<<endl<<"anda berhasil login"<<endl<<endl;
+    for (int i = 2; i >= 0; i--) {
+        ifstream loginFile("akun.txt");
+        if (!loginFile.is_open()) {
+            cout << "Gagal membuka file akun. Silakan coba lagi nanti." << endl;
+            cout << "Tekan Enter untuk melanjutkan..." << endl;
+            cin.ignore();
+            cin.get(); // Wait for user input
+            return;
+        }
+
+        // Check if the file is empty
+        loginFile.seekg(0, ios::end);
+        if (loginFile.tellg() == 0) {
+            cout << "File akun kosong. Tidak ada username atau password yang tersedia." << endl;
+            cout << "Tekan Enter untuk melanjutkan..." << endl;
+            cin.ignore();
+            cin.get(); // Wait for user input
+            loginFile.close();
+            return;
+        }
+        loginFile.seekg(0, ios::beg); // Reset file pointer to the beginning
+
+        cout << "\nMasukan Username anda \t: ";
+        cin >> username;
+        cout << "Masukan Password anda \t: ";
+        cin >> password;
+
+        while (!loginFile.eof()) {
+            loginFile >> veriUsern;
+            loginFile >> veriPass;
+            loginFile >> veriPeran;
+            if ((veriUsern == username) && (veriPass == password)) {
+                cout << endl << "Anda berhasil login" << endl << endl;
                 check = true;
                 break;
             }
         }
-        if((i == 0) && (!check)){
-            cout<<"Kesempatan Login anda Habis, Silahkan Coba Kembali Lain Kali"<<endl;
-            exit(0);
-        }else if(!check){
-            cout<<"Username atau Password anda salah"<<endl;
-            cout<<"Anda Masih memiliki "<< i <<" kesempatan lagi"<<endl;
-            cout<<"Silahkan mengisi kembali"<<endl;
-            cout<<endl;
+
+        if ((i == 0) && (!check)) {
+            cout << "Kesempatan login Anda habis. Silakan coba kembali lain kali." << endl;
+            loginFile.close();
+            return;
+        } else if (!check) {
+            cout << "Username atau password Anda salah." << endl;
+            cout << "Anda masih memiliki " << i << " kesempatan lagi." << endl;
+            cout << "Silakan mengisi kembali." << endl;
+            cout << endl;
         }
-         if (check){
+
+        if (check) {
             break;
         }
-        login.close();
+        loginFile.close();
     }
-    if(veriPeran == "user")menu_user();
-    else if(veriPeran == "admin")menu_admin();
+
+    if (check) {
+        if (veriPeran == "user") {
+            menu_user();
+        } else if (veriPeran == "admin") {
+            menu_admin();
+        } else {
+            cout << "Peran tidak valid. Silakan hubungi administrator." << endl;
+        }
+    }
 }
 
 void buat_akun(){
