@@ -320,7 +320,7 @@ void buat_akun(){
     if(akun){
         cout<<"\nSelamat Akun anda sudah di buat"<<endl;
         cout<<"Silahkan Lanjut ke menu login"<<endl;
-        loginpage();
+        login();
     }else{
         cout<<"Terjadi kesalahan, silahkan coba lagi"<<endl;
     }
@@ -995,7 +995,7 @@ void delete_anggota(){
   getline(cin, kill_name);
 
   bool found = false;
-  for (int i = 0; i <=jumlahBuku; i++) {
+  for (int i = 0; i < jumlahAnggota; i++) {
     if (daftarAnggota[i].nama.find(kill_name) != string::npos) {
         cout << "Id Anggota\t: " << daftarAnggota[i].id << endl;
         cout << "Nama\t\t: " << daftarAnggota[i].nama << endl;
