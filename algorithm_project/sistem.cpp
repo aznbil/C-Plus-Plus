@@ -213,12 +213,17 @@ void read_filePeminjaman(){
 
 void loginpage() {
     int pilih;
+    system("clear"); // Clear screen after input
+    system("cls");   // Clear screen for Windows
     cout << "Login sebagai:" << endl;
     cout << "1. Login" << endl;
     cout << "2. Buat akun" << endl;
     cout << "3. Exit" << endl;
     cout << "Jawab: ";
     cin >> pilih;
+
+    system("clear"); // Clear screen after input
+    system("cls");   // Clear screen for Windows
 
     switch (pilih) {
         case 1:
@@ -347,12 +352,18 @@ void menu_user() {
     char jawab;
 
     do {
+        system("clear"); // Clear screen for macOS/Linux
+        system("cls");   // Clear screen for Windows
+
         cout << "\nWelcome" << endl;
         cout << "1. Create data diri" << endl;
         cout << "2. Lihat peminjaman" << endl;
-        cout << "3. Logout" << endl; // Changed "Exit" to "Logout"
+        cout << "3. Logout" << endl;
         cout << "Pilih menu: ";
         cin >> pilih;
+
+        system("clear"); // Clear screen after input
+        system("cls");   // Clear screen for Windows
 
         switch (pilih) {
             case 1:
@@ -374,6 +385,9 @@ void menu_user() {
         }
         cout << "Ingin lanjut (y/n): ";
         cin >> jawab;
+
+        system("clear"); // Clear screen for macOS/Linux
+        system("cls");   // Clear screen for Windows
     } while (jawab == 'y');
 }
 
@@ -382,6 +396,9 @@ void menu_admin() {
     char jawab;
 
     do {
+        system("clear"); // Clear screen for macOS/Linux
+        system("cls");   // Clear screen for Windows
+
         cout << "\nWelcome" << endl;
         cout << "1. Create" << endl;
         cout << "2. Read" << endl;
@@ -389,9 +406,12 @@ void menu_admin() {
         cout << "4. Delete" << endl;
         cout << "5. Update" << endl;
         cout << "6. Search" << endl;
-        cout << "7. Logout" << endl; // Changed "Exit" to "Logout"
+        cout << "7. Logout" << endl;
         cout << "Pilih menu: ";
         cin >> choose;
+
+        system("clear"); // Clear screen after input
+        system("cls");   // Clear screen for Windows
 
         switch (choose) {
             case 1:
@@ -414,6 +434,10 @@ void menu_admin() {
                 cout << "3. Update Peminjaman" << endl;
                 cout << "Pilih menu: ";
                 cin >> updateChoice;
+
+                system("clear"); // Clear screen after input
+                system("cls");   // Clear screen for Windows
+
                 switch (updateChoice) {
                     case 1:
                         update_buku();
@@ -441,6 +465,9 @@ void menu_admin() {
         }
         cout << "Ingin lanjut (y/n): ";
         cin >> jawab;
+
+        system("clear"); // Clear screen for macOS/Linux
+        system("cls");   // Clear screen for Windows
     } while (jawab == 'y');
 }
 
