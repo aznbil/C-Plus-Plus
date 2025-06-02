@@ -735,10 +735,10 @@ void read_peminjaman(int index = 0){
 
 void menu_read_user(){
   string nama;
-  cin.ignore();
   cout << "Masukkan nama anda : " ; 
-  cin >> nama;
-
+  cin.ignore();
+  getline(cin,nama);
+  
   //salinan peminjaman
   Peminjaman salinan_peminjam[100];
   bool found = false;
