@@ -455,31 +455,7 @@ void menu_admin() {
                 menu_Delete();
                 break;
             case 5:
-                int updateChoice;
-                cout << "\nMenu Update" << endl;
-                cout << "1. Update Buku" << endl;
-                cout << "2. Update Anggota" << endl;
-                cout << "3. Update Peminjaman" << endl;
-                cout << "Pilih menu: ";
-                cin >> updateChoice;
-
-                system("clear"); // Clear screen after input
-                system("cls");   // Clear screen for Windows
-
-                switch (updateChoice) {
-                    case 1:
-                        update_buku();
-                        break;
-                    case 2:
-                        update_anggota();
-                        break;
-                    case 3:
-                        update_peminjaman();
-                        break;
-                    default:
-                        cout << "Input tidak valid" << endl;
-                        break;
-                }
+                menu_Update();
                 break;
             case 6:
                 menu_search();
@@ -1323,4 +1299,28 @@ void update_peminjaman() {
     }
 }
 
-
+void menu_Update(){
+  int updateChoice;
+    cout << "\nMenu Update" << endl;
+    cout << "1. Update Buku" << endl;
+    cout << "2. Update Anggota" << endl;
+    cout << "3. Update Peminjaman" << endl;
+    cout << "Pilih menu: ";
+    cin >> updateChoice;
+    system("clear"); // Clear screen after input
+    system("cls");   // Clear screen for Windows
+    switch (updateChoice) {
+        case 1:
+            update_buku();
+            break;
+        case 2:
+            update_anggota();
+            break;
+        case 3:
+            update_peminjaman();
+            break;
+        default:
+            cout << "Input tidak valid" << endl;
+            break;
+    }
+}
