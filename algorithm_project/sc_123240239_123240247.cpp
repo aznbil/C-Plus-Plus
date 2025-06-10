@@ -1008,7 +1008,7 @@ void delete_buku(){
           }
         }
         else{
-          return menu_admin();
+          cout << "Delete dibatalkan " << endl;
         }
     }
   }
@@ -1059,7 +1059,7 @@ void delete_anggota(){
           }
         }
         else{
-          return menu_admin();
+          cout << "Delete dibatalkan " << endl;
         }
     }
   }
@@ -1108,7 +1108,7 @@ void delete_peminjaman(){
           }
         }
         else{
-          return menu_admin();
+          cout << "Delete dibatalkan " << endl;
         }
       found = true;
     }
