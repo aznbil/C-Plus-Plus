@@ -1149,17 +1149,19 @@ void update_buku() {
                 cout << "Buku berhasil diupdate." << endl;
 
                 ofstream book("dataBuku.txt", ios::trunc);
-                if(book.is_open()){
-                  book << daftarBuku[i].id << endl;
-                  book << daftarBuku[i].judul << endl;
-                  book << daftarBuku[i].penulis << endl;
-                  book << daftarBuku[i].tahun_terbit << endl;
-                  book.close();
+                if (book.is_open()) {
+                    for (int j = 0; j < jumlahBuku; j++) {
+                        book << daftarBuku[j].id << endl;
+                        book << daftarBuku[j].judul << endl;
+                        book << daftarBuku[j].penulis << endl;
+                        book << daftarBuku[j].tahun_terbit << endl;
+                    }
+                    book.close();
+                } else {
+                    cout << "Gagal menyimpan data ke file." << endl;
                 }
-                return;
             } else {
                 cout << "Update dibatalkan." << endl;
-                return;
             }
         }
     }
@@ -1202,18 +1204,20 @@ void update_anggota() {
                 cout << "Anggota berhasil diupdate." << endl;
 
                 ofstream anggota("dataAnggota.txt", ios::trunc);
-                if(anggota.is_open()){
-                  anggota << daftarAnggota[i].id << endl;
-                  anggota << daftarAnggota[i].nama << endl;
-                  anggota << daftarAnggota[i].role.role << endl;
-                  anggota << daftarAnggota[i].alamat << endl;
-                  anggota << daftarAnggota[i].telepon << endl;
-                  anggota.close();
+                if (anggota.is_open()) {
+                    for (int j = 0; j < jumlahAnggota; j++) {
+                        anggota << daftarAnggota[j].id << endl;
+                        anggota << daftarAnggota[j].nama << endl;
+                        anggota << daftarAnggota[j].role.role << endl;
+                        anggota << daftarAnggota[j].alamat << endl;
+                        anggota << daftarAnggota[j].telepon << endl;
+                    }
+                    anggota.close();
+                } else {
+                    cout << "Gagal menyimpan data ke file." << endl;
                 }
-                return;
             } else {
                 cout << "Update dibatalkan." << endl;
-                return;
             }
         }
     }
@@ -1279,18 +1283,20 @@ void update_peminjaman() {
                 cout << "Peminjaman berhasil diupdate." << endl;
 
                 ofstream borrow("dataPeminjaman.txt", ios::trunc);
-                if(borrow.is_open()){
-                  borrow << daftarPeminjaman[i].idPeminjam << endl;
-                  borrow << daftarPeminjaman[i].judul_buku << endl;
-                  borrow << daftarPeminjaman[i].nama_anggota << endl;
-                  borrow << daftarPeminjaman[i].tanggal_pinjam << endl;
-                  borrow << daftarPeminjaman[i].tanggal_kembali << endl;
-                  borrow.close();
+                if (borrow.is_open()) {
+                    for (int k = 0; k < jumlahPeminjaman; k++) {
+                        borrow << daftarPeminjaman[k].idPeminjam << endl;
+                        borrow << daftarPeminjaman[k].judul_buku << endl;
+                        borrow << daftarPeminjaman[k].nama_anggota << endl;
+                        borrow << daftarPeminjaman[k].tanggal_pinjam << endl;
+                        borrow << daftarPeminjaman[k].tanggal_kembali << endl;
+                    }
+                    borrow.close();
+                } else {
+                    cout << "Gagal menyimpan ke file." << endl;
                 }
-                return;
             } else {
                 cout << "Update dibatalkan." << endl;
-                return;
             }
         }
     }
